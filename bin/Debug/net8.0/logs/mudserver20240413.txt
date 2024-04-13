@@ -1,0 +1,10 @@
+2024-04-13 09:53:59.542 -05:00 [INF] Server started. Listening for connections...
+2024-04-13 09:54:29.749 -05:00 [INF] Connected to client.
+2024-04-13 10:08:10.895 -05:00 [INF] Server started on 0.0.0.0:5000. Listening for connections...
+2024-04-13 10:08:31.740 -05:00 [INF] Client connected.
+2024-04-13 10:08:35.257 -05:00 [DBG] Received: Hello
+
+2024-04-13 10:08:35.259 -05:00 [DBG] Sent: Hello
+
+2024-04-13 10:08:41.882 -05:00 [INF] Client disconnected.
+2024-04-13 10:10:25.410 -05:00 [INF] Server started on 0.0.0.0:5000. Listening for connections...
