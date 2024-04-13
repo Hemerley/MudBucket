@@ -35,25 +35,32 @@ class Program
             MudBucket.Interfaces.ILogger logger = new SerilogLogger();
             ICommandParser commandParser = new CommandParser();
 
-            // Initialize the tick timer and server
-            ITickTimer tickTimer = new GameTickTimer();
+            // Initialize the tick scheduler, timer, and server
+            var tickScheduler = new TickScheduler(); // Create an instance of TickScheduler
+            ITickTimer tickTimer = new GameTickTimer(tickScheduler); // Pass the scheduler to GameTickTimer
             TcpServer server = new TcpServer(ipAddress, appSettings.Port, logger, commandParser);
-            ServerManager serverManager = new ServerManager(tickTimer, server);
+            ServerManager serverManager = new ServerManager(tickScheduler, server);
 
             // Register tickable entities
-            WorldTick worldTick = new WorldTick();
-            CombatTick combatTick = new CombatTick(); // Combat tick initialization
+            WorldTick worldTick = new WorldTick(logger);
+            CombatTick combatTick = new CombatTick(logger);
+            RepopTick repopTick = new RepopTick(logger);
+
             serverManager.RegisterTickable(worldTick);
-            serverManager.RegisterTickable(combatTick); // Register the combat tick action
+            serverManager.RegisterTickable(combatTick);
+            serverManager.RegisterTickable(repopTick);
 
-            // Start the server asynchronously
-            await StartServer(serverManager);
+            // Start the server
+            serverManager.StartServer();
 
-            Console.WriteLine("Press any key to stop the server...");
+            // Start the tick scheduler
+            tickScheduler.Start();
+
+            Log.Information("Press any key to stop the server...");
             Console.ReadKey();
 
-            // Stop the server asynchronously
-            await StopServer(serverManager);
+            // Stop the server
+            serverManager.StopServer();
         }
         catch (Exception ex)
         {
@@ -64,17 +71,5 @@ class Program
             // Ensure the log buffer is flushed before the application exits
             Log.CloseAndFlush();
         }
-    }
-
-    // Asynchronously start the server to allow the main thread to remain responsive
-    private static async Task StartServer(ServerManager serverManager)
-    {
-        await Task.Run(() => serverManager.StartServer());
-    }
-
-    // Asynchronously stop the server
-    private static async Task StopServer(ServerManager serverManager)
-    {
-        await Task.Run(() => serverManager.StopServer());
     }
 }

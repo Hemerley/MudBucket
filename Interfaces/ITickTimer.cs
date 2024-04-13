@@ -1,11 +1,7 @@
-﻿using MudBucket.Interfaces;
-
-namespace MudBucket.Systems
+﻿namespace MudBucket.Interfaces
 {
     public interface ITickTimer
     {
-        void StartTimer(int intervalMs);
-        void StopTimer();
         void RegisterTickable(ITickable tickable);
         void UnregisterTickable(ITickable tickable);
     }

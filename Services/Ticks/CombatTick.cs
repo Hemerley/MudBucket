@@ -4,11 +4,24 @@ namespace MudBucket.Services.Ticks
 {
     public class CombatTick : ITickable
     {
+        private readonly ILogger _logger;
+
+        public CombatTick(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public void Tick()
         {
-            // Here you implement what happens during a combat tick
-            Console.WriteLine("Combat tick occurred at " + DateTime.Now);
-            // Example: Update combat states, check for cooldown expiration, AI decisions, etc.
+            // Log combat tick occurrence
+            _logger.Information($"Combat tick occurred at {DateTime.Now}");
+
+            // Implement combat logic here
+        }
+
+        public TimeSpan GetInterval()
+        {
+            return TimeSpan.FromSeconds(1); // Specify the interval for combat ticks
         }
     }
 }

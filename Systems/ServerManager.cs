@@ -1,22 +1,18 @@
 ﻿using MudBucket.Interfaces;
 using MudBucket.Network;
-using MudBucket.Systems;
-using System.Collections.Generic;
 
 namespace MudBucket
 {
     public class ServerManager
     {
-        private readonly ITickTimer _tickTimer;
+        private readonly IScheduler _scheduler;
         private readonly TcpServer _server;
         private readonly List<ITickable> _tickables;  // List to manage tickable instances
-        private readonly int _tickIntervalMs;
 
-        public ServerManager(ITickTimer tickTimer, TcpServer server, int tickIntervalMs = 1000)
+        public ServerManager(IScheduler scheduler, TcpServer server)
         {
-            _tickTimer = tickTimer;
+            _scheduler = scheduler;
             _server = server;
-            _tickIntervalMs = tickIntervalMs;
             _tickables = new List<ITickable>();  // Initialize the list of tickables
         }
 
@@ -26,10 +22,10 @@ namespace MudBucket
             if (!_tickables.Contains(tickable))
             {
                 _tickables.Add(tickable);
-                // If the server is already running, dynamically register tickable to timer
+                // If the server is already running, dynamically register tickable to scheduler
                 if (_server.IsRunning)
                 {
-                    _tickTimer.RegisterTickable(tickable);
+                    _scheduler.ScheduleTickable(tickable);
                 }
             }
         }
@@ -40,24 +36,22 @@ namespace MudBucket
             if (_tickables.Contains(tickable))
             {
                 _tickables.Remove(tickable);
-                // If the server is still running, dynamically unregister tickable from timer
+                // If the server is still running, dynamically unregister tickable from scheduler
                 if (_server.IsRunning)
                 {
-                    _tickTimer.UnregisterTickable(tickable);
+                    _scheduler.UnscheduleTickable(tickable);
                 }
             }
         }
 
         public void StartServer()
         {
-            // Register all tickables with the tick timer
+
+            // Register all tickables with the scheduler
             foreach (ITickable tickable in _tickables)
             {
-                _tickTimer.RegisterTickable(tickable);
+                _scheduler.ScheduleTickable(tickable);
             }
-
-            // Start the tick timer with the specified interval
-            _tickTimer.StartTimer(_tickIntervalMs);
 
             // Start the TCP server
             _server.Start();
@@ -65,11 +59,9 @@ namespace MudBucket
 
         public void StopServer()
         {
-            // Stop the tick timer and unregister all tickables
-            _tickTimer.StopTimer();
             foreach (ITickable tickable in _tickables)
             {
-                _tickTimer.UnregisterTickable(tickable);
+                _scheduler.UnscheduleTickable(tickable);
             }
 
             // Stop the TCP server

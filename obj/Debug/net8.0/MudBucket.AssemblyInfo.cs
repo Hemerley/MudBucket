@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MudBucket")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1492e1b62541c0b15d59c55b5ed27b9f20effe6c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b9cad625de4d4df6b067a09571ee0a7c7dfcaf8")]
 [assembly: System.Reflection.AssemblyProductAttribute("MudBucket")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MudBucket")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
