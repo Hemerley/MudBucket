@@ -1,7 +1,7 @@
 ﻿using MudBucket.Interfaces;
 using System.Net.Sockets;
 
-namespace MudBucket.Systems
+namespace MudBucket.Services.Commands
 {
     public class CommandParser : ICommandParser
     {

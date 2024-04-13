@@ -1,4 +1,4 @@
-﻿namespace MudBucket.Systems
+﻿namespace MudBucket.Services.Logger
 {
     using Serilog;
 

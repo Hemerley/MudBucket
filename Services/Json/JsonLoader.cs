@@ -1,7 +1,7 @@
 ﻿using MudBucket.Interfaces;
 using System.Text.Json;
 
-namespace MudBucket.Systems
+namespace MudBucket.Services.Json
 {
     public class GenericJsonLoader : IJsonLoader
     {

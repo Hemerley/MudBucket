@@ -6,7 +6,6 @@ namespace MudBucket.Commands
 {
     public abstract class CommandBase : ICommand
     {
-        // Centralized SendToClient method
         protected void SendToClient(string message, TcpClient client)
         {
             var stream = client.GetStream();

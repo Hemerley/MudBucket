@@ -1,6 +1,6 @@
 ﻿using MudBucket.Interfaces;
 
-namespace MudBucket.Services
+namespace MudBucket.Services.Ticks
 {
     public class WorldTick : ITickable
     {
