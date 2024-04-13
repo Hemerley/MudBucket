@@ -3,6 +3,8 @@ using System.Net;
 using Microsoft.Extensions.Configuration;
 using MudBucket;
 using MudBucket.Interfaces;
+using MudBucket.Network;
+using MudBucket.Systems;
 
 class Program
 {
@@ -18,17 +20,35 @@ class Program
             .ReadFrom.Configuration(configuration)
             .CreateLogger();
 
-        // Deserialize settings
-        var appSettings = configuration.GetSection("ApplicationSettings").Get<ApplicationSettings>();
+        // Ensure that logger starts correctly and close if it fails to initialize
+        try
+        {
+            Log.Information("Starting server...");
 
-        // Convert string IP address to enum or IP object
-        IPAddress ipAddress = appSettings.IPAddress.Equals("Any", StringComparison.OrdinalIgnoreCase) ?
-                              IPAddress.Any : IPAddress.Parse(appSettings.IPAddress);
+            // Deserialize settings
+            var appSettings = configuration.GetSection("ApplicationSettings").Get<ApplicationSettings>();
 
-        // Initialize logger and server with configuration settings
-        MudBucket.Interfaces.ILogger logger = new SerilogLogger();
-        var server = new TcpServer(ipAddress, appSettings.Port, appSettings.BufferSize, appSettings.ConnectionTimeout, logger);
+            // Convert string IP address to enum or IP object
+            IPAddress ipAddress = appSettings.IPAddress.Equals("Any", StringComparison.OrdinalIgnoreCase) ?
+                                  IPAddress.Any : IPAddress.Parse(appSettings.IPAddress);
 
-        await server.StartAsync();
+            // Initialize logger and server with configuration settings
+            MudBucket.Interfaces.ILogger logger = new SerilogLogger(); // Custom logger that wraps Serilog
+            ICommandParser commandParser = new CommandParser(); // Assuming you have a command parser implementation
+
+            var server = new TcpServer(ipAddress, appSettings.Port, appSettings.BufferSize, logger, commandParser);
+
+            // Start server asynchronously
+            await server.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Failed to start server");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 }
+

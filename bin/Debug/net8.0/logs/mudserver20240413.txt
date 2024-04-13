@@ -8,3 +8,41 @@
 
 2024-04-13 10:08:41.882 -05:00 [INF] Client disconnected.
 2024-04-13 10:10:25.410 -05:00 [INF] Server started on 0.0.0.0:5000. Listening for connections...
+2024-04-13 12:10:35.468 -05:00 [INF] Starting server...
+2024-04-13 12:10:35.570 -05:00 [INF] Server started on port 5000
+2024-04-13 12:10:47.183 -05:00 [INF] Client connected
+2024-04-13 12:10:50.352 -05:00 [DBG] Received: look
+
+2024-04-13 12:10:57.735 -05:00 [DBG] Received: quit
+
+2024-04-13 12:10:57.813 -05:00 [ERR] An error occurred with a client: Cannot access a disposed object.
+Object name: 'System.Net.Sockets.NetworkStream'.
+2024-04-13 12:10:57.815 -05:00 [INF] Client disconnected
+2024-04-13 12:16:37.500 -05:00 [INF] Starting server...
+2024-04-13 12:16:37.604 -05:00 [INF] Server started on port 5000
+2024-04-13 12:16:40.446 -05:00 [INF] Client connected
+2024-04-13 12:16:43.837 -05:00 [DBG] Received: look
+
+2024-04-13 12:16:47.320 -05:00 [DBG] Received: say hi
+
+2024-04-13 12:17:01.262 -05:00 [DBG] Received: move
+
+2024-04-13 12:17:10.661 -05:00 [DBG] Received: quit
+
+2024-04-13 12:17:10.684 -05:00 [ERR] An error occurred with a client: Cannot access a disposed object.
+Object name: 'System.Net.Sockets.NetworkStream'.
+2024-04-13 12:17:10.685 -05:00 [INF] Client disconnected
+2024-04-13 12:49:11.650 -05:00 [INF] Starting server...
+2024-04-13 12:49:11.723 -05:00 [INF] Server started on port 5000
+2024-04-13 13:03:58.184 -05:00 [INF] Starting server...
+2024-04-13 13:03:58.278 -05:00 [INF] Server started on port 5000
+2024-04-13 13:04:03.043 -05:00 [INF] Client connected
+2024-04-13 13:04:06.487 -05:00 [DBG] Received: look
+
+2024-04-13 13:04:08.647 -05:00 [DBG] Received: quit
+
+2024-04-13 13:04:08.668 -05:00 [ERR] An error occurred with a client: Cannot access a disposed object.
+Object name: 'System.Net.Sockets.NetworkStream'.
+2024-04-13 13:04:08.669 -05:00 [INF] Client disconnected
+2024-04-13 13:04:32.983 -05:00 [INF] Starting server...
+2024-04-13 13:04:33.062 -05:00 [INF] Server started on port 5000

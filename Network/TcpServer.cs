@@ -4,89 +4,74 @@ using System.Net.Sockets;
 using System.Text;
 using MudBucket.Interfaces;
 
-public class TcpServer
+namespace MudBucket.Network
 {
-    private readonly IPAddress ipAddress;
-    private readonly int port;
-    private readonly int bufferSize;
-    private readonly int connectionTimeout;  // In seconds
-    private readonly ILogger logger;
-    private TcpListener listener;
-
-    public TcpServer(IPAddress ipAddress, int port, int bufferSize, int connectionTimeout, ILogger logger)
+    public class TcpServer
     {
-        this.ipAddress = ipAddress;
-        this.port = port;
-        this.bufferSize = bufferSize;
-        this.connectionTimeout = connectionTimeout;
-        this.logger = logger;
-    }
+        private readonly ILogger _logger;
+        private readonly ICommandParser _commandParser;
+        private TcpListener _listener;
+        private readonly int _port;
+        private readonly int _bufferSize;
 
-    public async Task StartAsync()
-    {
-        listener = new TcpListener(ipAddress, port);
-        listener.Start();
-        logger.Information($"Server started on {ipAddress}:{port}. Listening for connections...");
-
-        try
+        public TcpServer(IPAddress ipAddress, int port, int bufferSize, ILogger logger, ICommandParser commandParser)
         {
-            while (true)
+            _logger = logger;
+            _commandParser = commandParser;
+            _port = port;
+            _bufferSize = bufferSize;
+            _listener = new TcpListener(ipAddress, port);
+        }
+
+        public async Task StartAsync()
+        {
+            _listener.Start();
+            _logger.Information("Server started on port " + _port);
+
+            try
             {
-                TcpClient client = await listener.AcceptTcpClientAsync();
-                logger.Information("Client connected.");
-                HandleClientAsync(client);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.Error($"Error in server main loop: {ex.Message}");
-        }
-        finally
-        {
-            listener.Stop();
-        }
-    }
-
-    private async void HandleClientAsync(TcpClient client)
-    {
-        try
-        {
-            using (client)
-            {
-                client.ReceiveTimeout = connectionTimeout * 1000;  // Convert seconds to milliseconds
-                var stream = client.GetStream();
-                var buffer = new byte[bufferSize];
-                int bytesRead;
-
-                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                while (true)
                 {
-                    string receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    logger.Debug($"Received: {receivedText}");
-
-                    // Echo the data back to the client
-                    await stream.WriteAsync(buffer, 0, bytesRead);
-                    logger.Debug($"Sent: {receivedText}");
+                    var client = await _listener.AcceptTcpClientAsync();
+                    _logger.Information("Client connected");
+                    _ = HandleClient(client);  // Handle client asynchronously
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            if (ex is SocketException socketEx && socketEx.SocketErrorCode == SocketError.TimedOut)
+            finally
             {
-                logger.Error("Connection timed out.");
-            }
-            else
-            {
-                logger.Error($"Client handling error: {ex.Message}");
+                _listener.Stop();
+                _logger.Information("Server stopped");
             }
         }
-        finally
+
+        private async Task HandleClient(TcpClient client)
         {
-            if (client.Connected)
+            try
             {
-                client.Close();
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[_bufferSize];
+                int bytesRead;
+                bool keepConnection = true;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0 && keepConnection)
+                {
+                    var message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    _logger.Debug("Received: " + message);
+                    keepConnection = _commandParser.ParseCommand(message, client);
+                }
             }
-            logger.Information("Client disconnected.");
+            catch (Exception ex)
+            {
+                _logger.Error("An error occurred with a client: " + ex.Message);
+            }
+            finally
+            {
+                if (client.Connected)
+                {
+                    client.Close();
+                }
+                _logger.Information("Client disconnected");
+            }
         }
     }
 }
