@@ -1,0 +1,275 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\bheme\\source\\repos\\MudBucket\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\systems\\servermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:systems\\servermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\services\\combattick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:services\\combattick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\services\\worldtick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:services\\worldtick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\mudbucket.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:mudbucket.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\systems\\gameticktimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:systems\\gameticktimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\interfaces\\iticktimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:interfaces\\iticktimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\interfaces\\itickable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:interfaces\\itickable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\network\\tcpserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:network\\tcpserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\commands\\unknowncommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:commands\\unknowncommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\systems\\commandfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:systems\\commandfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\commands\\quitcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:commands\\quitcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\commands\\movecommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:commands\\movecommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\commands\\lookcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:commands\\lookcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|c:\\users\\bheme\\source\\repos\\mudbucket\\commands\\commandbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC2972F7-64A5-4BFC-B27F-2D9D8031DA08}|MudBucket.csproj|solutionrelative:commands\\commandbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CombatTick.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Services\\CombatTick.cs",
+              "RelativeDocumentMoniker": "Services\\CombatTick.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Services\\CombatTick.cs",
+              "RelativeToolTip": "Services\\CombatTick.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T21:30:10.597Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WorldTick.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Services\\WorldTick.cs",
+              "RelativeDocumentMoniker": "Services\\WorldTick.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Services\\WorldTick.cs",
+              "RelativeToolTip": "Services\\WorldTick.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T21:23:54.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MudBucket",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket.csproj",
+              "RelativeDocumentMoniker": "MudBucket.csproj",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket.csproj",
+              "RelativeToolTip": "MudBucket.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-04-13T21:23:27.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ITickable.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Interfaces\\ITickable.cs",
+              "RelativeDocumentMoniker": "Interfaces\\ITickable.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Interfaces\\ITickable.cs",
+              "RelativeToolTip": "Interfaces\\ITickable.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T21:02:08.393Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ServerManager.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Systems\\ServerManager.cs",
+              "RelativeDocumentMoniker": "Systems\\ServerManager.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Systems\\ServerManager.cs",
+              "RelativeToolTip": "Systems\\ServerManager.cs",
+              "ViewState": "AQIAADUAAAAAAAAAAAAIwA8AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:54:31.556Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAgwC0AAABAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:46:23.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "TcpServer.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Network\\TcpServer.cs",
+              "RelativeDocumentMoniker": "Network\\TcpServer.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Network\\TcpServer.cs",
+              "RelativeToolTip": "Network\\TcpServer.cs",
+              "ViewState": "AQIAADsAAAAAAAAAAAAiwGIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:46:17.069Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GameTickTimer.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Systems\\GameTickTimer.cs",
+              "RelativeDocumentMoniker": "Systems\\GameTickTimer.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Systems\\GameTickTimer.cs",
+              "RelativeToolTip": "Systems\\GameTickTimer.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAgwBQAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:43:26.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ITickTimer.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Interfaces\\ITickTimer.cs",
+              "RelativeDocumentMoniker": "Interfaces\\ITickTimer.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Interfaces\\ITickTimer.cs",
+              "RelativeToolTip": "Interfaces\\ITickTimer.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:43:04.914Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CommandFactory.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Systems\\CommandFactory.cs",
+              "RelativeDocumentMoniker": "Systems\\CommandFactory.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Systems\\CommandFactory.cs",
+              "RelativeToolTip": "Systems\\CommandFactory.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:38:44.967Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "MoveCommand.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\MoveCommand.cs",
+              "RelativeDocumentMoniker": "Commands\\MoveCommand.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\MoveCommand.cs",
+              "RelativeToolTip": "Commands\\MoveCommand.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:38:05.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UnknownCommand.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\UnknownCommand.cs",
+              "RelativeDocumentMoniker": "Commands\\UnknownCommand.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\UnknownCommand.cs",
+              "RelativeToolTip": "Commands\\UnknownCommand.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:38:02.635Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "QuitCommand.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\QuitCommand.cs",
+              "RelativeDocumentMoniker": "Commands\\QuitCommand.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\QuitCommand.cs",
+              "RelativeToolTip": "Commands\\QuitCommand.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:37:57.272Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "LookCommand.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\LookCommand.cs",
+              "RelativeDocumentMoniker": "Commands\\LookCommand.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\LookCommand.cs",
+              "RelativeToolTip": "Commands\\LookCommand.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:37:56.262Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CommandBase.cs",
+              "DocumentMoniker": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\CommandBase.cs",
+              "RelativeDocumentMoniker": "Commands\\CommandBase.cs",
+              "ToolTip": "C:\\Users\\bheme\\source\\repos\\MudBucket\\Commands\\CommandBase.cs",
+              "RelativeToolTip": "Commands\\CommandBase.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-13T20:37:55.061Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

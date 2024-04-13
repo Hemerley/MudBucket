@@ -847,11 +847,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket\\MudBucket.csproj",
+      "projectUniqueName": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket.csproj",
       "projectName": "MudBucket",
-      "projectPath": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket\\MudBucket.csproj",
+      "projectPath": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket.csproj",
       "packagesPath": "C:\\Users\\bheme\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bheme\\source\\repos\\MudBucket\\MudBucket\\obj\\",
+      "outputPath": "C:\\Users\\bheme\\source\\repos\\MudBucket\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

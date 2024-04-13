@@ -2,11 +2,11 @@
 
 namespace MudBucket.Commands
 {
-    public class LookCommand : CommandBase
+    public class UnknownCommand : CommandBase
     {
         public override bool Execute(TcpClient client)
         {
-            SendToClient("You look around and see...", client);
+            SendToClient("Arf, Arf! Bucket doesn't understand!", client);
             return true;
         }
     }

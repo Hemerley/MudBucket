@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MudBucket
-build_property.ProjectDir = C:\Users\bheme\source\repos\MudBucket\MudBucket\
+build_property.ProjectDir = C:\Users\bheme\source\repos\MudBucket\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

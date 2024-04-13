@@ -1,63 +1,84 @@
-﻿using System;
+﻿using MudBucket.Interfaces;
+using MudBucket.Systems;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using MudBucket.Interfaces;
+using System.Threading.Tasks;
 
 namespace MudBucket.Network
 {
     public class TcpServer
     {
         private readonly ILogger _logger;
-        private readonly ICommandParser _commandParser;
+        private readonly CommandHandler _commandHandler;
         private TcpListener _listener;
         private readonly int _port;
-        private readonly int _bufferSize;
+        private bool _isRunning;
 
-        public TcpServer(IPAddress ipAddress, int port, int bufferSize, ILogger logger, ICommandParser commandParser)
+        public bool IsRunning => _isRunning;  // Property to check if the server is currently running
+
+        public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser)
         {
             _logger = logger;
-            _commandParser = commandParser;
+            _commandHandler = new CommandHandler(commandParser, logger);
             _port = port;
-            _bufferSize = bufferSize;
             _listener = new TcpListener(ipAddress, port);
         }
 
-        public async Task StartAsync()
+        public void Start()
         {
             _listener.Start();
+            _isRunning = true;
             _logger.Information("Server started on port " + _port);
+            Task.Run(() => AcceptClientsAsync());
+        }
 
+        public void Stop()
+        {
+            _isRunning = false;
+            _listener.Stop();
+            _logger.Information("Server stopped");
+        }
+
+        private async Task AcceptClientsAsync()
+        {
             try
             {
-                while (true)
+                while (_isRunning)
                 {
                     var client = await _listener.AcceptTcpClientAsync();
                     _logger.Information("Client connected");
-                    _ = HandleClient(client);  // Handle client asynchronously
+                    HandleClientAsync(client).ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                            _logger.Error("Error handling client: " + t.Exception.Flatten().InnerException.Message);
+                    }, TaskContinuationOptions.OnlyOnFaulted);
                 }
             }
-            finally
+            catch (SocketException ex)
             {
-                _listener.Stop();
-                _logger.Information("Server stopped");
+                if (_isRunning)
+                    _logger.Error("Listener stopped or an error occurred: " + ex.Message);
             }
         }
 
-        private async Task HandleClient(TcpClient client)
+        private async Task HandleClientAsync(TcpClient client)
         {
             try
             {
-                NetworkStream stream = client.GetStream();
-                byte[] buffer = new byte[_bufferSize];
-                int bytesRead;
-                bool keepConnection = true;
-
-                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0 && keepConnection)
+                using (NetworkStream stream = client.GetStream())
                 {
-                    var message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                    _logger.Debug("Received: " + message);
-                    keepConnection = _commandParser.ParseCommand(message, client);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+
+                    while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                    {
+                        var message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                        _logger.Debug("Received: " + message);
+                        bool keepConnection = await _commandHandler.HandleCommandAsync(message, client);
+                        if (!keepConnection) break;
+                    }
                 }
             }
             catch (Exception ex)

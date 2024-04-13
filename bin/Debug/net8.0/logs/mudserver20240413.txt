@@ -46,3 +46,70 @@ Object name: 'System.Net.Sockets.NetworkStream'.
 2024-04-13 13:04:08.669 -05:00 [INF] Client disconnected
 2024-04-13 13:04:32.983 -05:00 [INF] Starting server...
 2024-04-13 13:04:33.062 -05:00 [INF] Server started on port 5000
+2024-04-13 15:37:16.751 -05:00 [INF] Starting server...
+2024-04-13 15:37:17.008 -05:00 [INF] Server started on port 5000
+2024-04-13 15:37:26.754 -05:00 [INF] Client connected
+2024-04-13 15:37:30.254 -05:00 [DBG] Received: Hello
+
+2024-04-13 15:37:30.288 -05:00 [ERR] Error handling command: Unknown command type
+2024-04-13 15:37:30.291 -05:00 [INF] Client disconnected
+2024-04-13 15:37:41.347 -05:00 [INF] Client connected
+2024-04-13 15:37:44.002 -05:00 [DBG] Received: look
+
+2024-04-13 15:37:46.740 -05:00 [DBG] Received: quit
+
+2024-04-13 15:38:11.778 -05:00 [INF] Starting server...
+2024-04-13 15:38:11.895 -05:00 [INF] Server started on port 5000
+2024-04-13 15:38:18.100 -05:00 [INF] Client connected
+2024-04-13 15:38:20.562 -05:00 [DBG] Received: jsj
+
+2024-04-13 15:38:20.589 -05:00 [ERR] Error handling command: Unknown command type
+2024-04-13 15:38:20.591 -05:00 [INF] Client disconnected
+2024-04-13 15:39:07.114 -05:00 [INF] Starting server...
+2024-04-13 15:39:07.213 -05:00 [INF] Server started on port 5000
+2024-04-13 15:39:10.283 -05:00 [INF] Client connected
+2024-04-13 15:39:12.042 -05:00 [DBG] Received: jsj
+
+2024-04-13 15:56:32.258 -05:00 [INF] Starting server...
+2024-04-13 15:56:32.374 -05:00 [INF] Tick Timer started with interval: 1000ms
+2024-04-13 15:56:32.379 -05:00 [INF] Server started on port 5000
+2024-04-13 15:56:32.381 -05:00 [INF] Tick at 4/13/2024 3:56:32 PM
+2024-04-13 15:56:33.364 -05:00 [INF] Tick at 4/13/2024 3:56:33 PM
+2024-04-13 15:56:34.371 -05:00 [INF] Tick at 4/13/2024 3:56:34 PM
+2024-04-13 15:56:35.367 -05:00 [INF] Tick at 4/13/2024 3:56:35 PM
+2024-04-13 15:56:36.368 -05:00 [INF] Tick at 4/13/2024 3:56:36 PM
+2024-04-13 15:56:37.367 -05:00 [INF] Tick at 4/13/2024 3:56:37 PM
+2024-04-13 15:56:38.377 -05:00 [INF] Tick at 4/13/2024 3:56:38 PM
+2024-04-13 15:56:39.368 -05:00 [INF] Tick at 4/13/2024 3:56:39 PM
+2024-04-13 15:59:04.589 -05:00 [INF] Starting server...
+2024-04-13 15:59:04.677 -05:00 [INF] Tick Timer started with interval: 45000ms
+2024-04-13 15:59:04.681 -05:00 [INF] Server started on port 5000
+2024-04-13 15:59:04.683 -05:00 [INF] Tick at 4/13/2024 3:59:04 PM
+2024-04-13 15:59:13.218 -05:00 [INF] Client connected
+2024-04-13 15:59:21.659 -05:00 [DBG] Received: hello
+
+2024-04-13 15:59:25.633 -05:00 [DBG] Received: say Hello
+
+2024-04-13 15:59:31.071 -05:00 [DBG] Received: look
+
+2024-04-13 15:59:32.974 -05:00 [DBG] Received: move
+
+2024-04-13 15:59:36.607 -05:00 [DBG] Received: quit
+
+2024-04-13 15:59:49.682 -05:00 [INF] Tick at 4/13/2024 3:59:49 PM
+2024-04-13 16:20:15.487 -05:00 [INF] Starting server...
+2024-04-13 16:20:15.599 -05:00 [INF] Server started on port 5000
+2024-04-13 16:20:26.782 -05:00 [INF] Client connected
+2024-04-13 16:20:28.734 -05:00 [DBG] Received: look
+
+2024-04-13 16:20:32.030 -05:00 [DBG] Received: sksk
+
+2024-04-13 16:20:34.154 -05:00 [DBG] Received: quit
+
+2024-04-13 16:20:35.989 -05:00 [DBG] Received: move
+
+2024-04-13 16:20:40.252 -05:00 [INF] Client disconnected
+2024-04-13 16:25:41.072 -05:00 [INF] Starting server...
+2024-04-13 16:25:41.163 -05:00 [INF] Server started on port 5000
+2024-04-13 16:34:06.966 -05:00 [INF] Starting server...
+2024-04-13 16:34:07.072 -05:00 [INF] Server started on port 5000
