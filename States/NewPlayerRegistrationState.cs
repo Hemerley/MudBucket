@@ -6,9 +6,7 @@ namespace MudBucket.States
     {
         public void ProcessInput(PlayerSession session, string input)
         {
-            // Handle registration inputs here
-            session.SetState(new CharacterCustomizationState());
-            session.SendToClient("Registration successful. Let's customize your character...", session.Client);
+            session.ProcessInput(input);
         }
     }
 }

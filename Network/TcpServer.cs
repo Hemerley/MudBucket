@@ -1,9 +1,12 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.Services.Commands;  // Assuming PlayerSession is located in this namespace
-using MudBucket.Systems;  // Assuming you have a logger service
+using MudBucket.Services.Commands;
+using MudBucket.Systems;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MudBucket.Network
 {
@@ -28,41 +31,36 @@ namespace MudBucket.Network
             _sessions = new Dictionary<int, PlayerSession>();
         }
 
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-        }
+        public bool IsRunning => _isRunning;
 
         public async Task Start()
         {
             _listener.Start();
             _isRunning = true;
-            _logger.Information("Server started on port " + _port);
+            _logger.Information($"Server started on port {_port}");
             try
             {
                 while (_isRunning)
                 {
                     TcpClient client = await _listener.AcceptTcpClientAsync();
                     _logger.Information("Client connected");
-                    var session = new PlayerSession(client, _commandHandler);
+
+                    var session = new PlayerSession(client, _commandHandler, true);
                     _sessions.Add(_sessionCounter++, session);
-                    HandleClient(session).ConfigureAwait(false);
+
+                    Task.Run(() => HandleClient(session)).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error("Server encountered an error: " + ex.Message);
-                _isRunning = false;
-            }
-            finally
-            {
-                _listener.Stop();
+                _logger.Error($"Server encountered an error: {ex.Message}");
+                Stop();
             }
         }
 
         private async Task HandleClient(PlayerSession session)
         {
-            TcpClient client = session.Client;
+            var client = session.Client;
             try
             {
                 var stream = client.GetStream();
@@ -77,12 +75,13 @@ namespace MudBucket.Network
             }
             catch (Exception ex)
             {
-                _logger.Error("Error handling client: " + ex.Message);
+                _logger.Error($"Error handling client: {ex.Message}");
             }
             finally
             {
                 client.Close();
-                _sessions.Remove(_sessions.FirstOrDefault(x => x.Value == session).Key);
+                int sessionId = _sessions.FirstOrDefault(x => x.Value == session).Key;
+                _sessions.Remove(sessionId);
                 _logger.Information("Client disconnected");
             }
         }

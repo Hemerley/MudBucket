@@ -7,9 +7,7 @@ namespace MudBucket.States
     {
         public void ProcessInput(PlayerSession session, string input)
         {
-            // Verify credentials and load player data
-            session.SetState(new InGameState());
-            session.SendToClient("Login successful. Welcome back to the game!", session.Client);
+            session.ProcessInput(input);
         }
     }
 }

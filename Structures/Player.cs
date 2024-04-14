@@ -6,7 +6,7 @@ namespace MudBucket.Structures
     public class Player
     {
         public string Name { get; set; }
-        public TcpClient Client { get; private set; } // Ensure client is only set in constructor
+        public TcpClient Client { get; private set; }
         public string Race { get; set; }
         public string Class { get; set; }
         public int Level { get; set; }
@@ -87,7 +87,7 @@ namespace MudBucket.Structures
             }
         }
 
-        public void SendMessage(string message) // Now public
+        public void SendMessage(string message)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(message + "\r\n");
             Client.GetStream().Write(buffer, 0, buffer.Length);

@@ -44,7 +44,7 @@ namespace MudBucket.Systems
         {
             while (_isRunning)
             {
-                await Task.Delay(TimeSpan.FromSeconds(1)); // Adjust as needed for tick granularity
+                await Task.Delay(TimeSpan.FromSeconds(1));
 
                 lock (_lock)
                 {
@@ -54,7 +54,7 @@ namespace MudBucket.Systems
                         if (interval <= TimeSpan.Zero)
                         {
                             tickable.Tick();
-                            _scheduledTickables[tickable] = tickable.GetInterval(); // Reset interval
+                            _scheduledTickables[tickable] = tickable.GetInterval();
                         }
                         else
                         {
