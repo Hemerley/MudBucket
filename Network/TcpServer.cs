@@ -1,36 +1,90 @@
 ﻿using MudBucket.Interfaces;
-using System;
+using MudBucket.Services.Commands;  // Assuming PlayerSession is located in this namespace
+using MudBucket.Systems;  // Assuming you have a logger service
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MudBucket.Network
 {
     public class TcpServer
     {
-        private readonly ILogger _logger;
-        private readonly ICommandParser _commandParser;
-        private TcpListener _listener;
+        private readonly IPAddress _ipAddress;
         private readonly int _port;
+        private TcpListener _listener;
         private bool _isRunning;
+        private readonly CommandHandler _commandHandler;
+        private readonly ILogger _logger;
+        private readonly Dictionary<int, PlayerSession> _sessions;
+        private int _sessionCounter = 0;
 
-        public bool IsRunning => _isRunning;  // Property to check if the server is currently running
-
-        public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser)
+        public TcpServer(IPAddress ipAddress, int port, ILogger logger, CommandHandler commandHandler)
         {
-            _logger = logger;
-            _commandParser = commandParser;
+            _ipAddress = ipAddress;
             _port = port;
-            _listener = new TcpListener(ipAddress, port);
+            _listener = new TcpListener(_ipAddress, _port);
+            _commandHandler = commandHandler;
+            _logger = logger;
+            _sessions = new Dictionary<int, PlayerSession>();
         }
 
-        public void Start()
+        public bool IsRunning
+        {
+            get { return _isRunning; }
+        }
+
+        public async Task Start()
         {
             _listener.Start();
             _isRunning = true;
             _logger.Information("Server started on port " + _port);
-            Task.Run(() => AcceptClientsAsync());
+            try
+            {
+                while (_isRunning)
+                {
+                    TcpClient client = await _listener.AcceptTcpClientAsync();
+                    _logger.Information("Client connected");
+                    var session = new PlayerSession(client, _commandHandler);
+                    _sessions.Add(_sessionCounter++, session);
+                    HandleClient(session).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Server encountered an error: " + ex.Message);
+                _isRunning = false;
+            }
+            finally
+            {
+                _listener.Stop();
+            }
+        }
+
+        private async Task HandleClient(PlayerSession session)
+        {
+            TcpClient client = session.Client;
+            try
+            {
+                var stream = client.GetStream();
+                var buffer = new byte[1024];
+                int bytesRead;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    var message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    session.ProcessInput(message.Trim());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error handling client: " + ex.Message);
+            }
+            finally
+            {
+                client.Close();
+                _sessions.Remove(_sessions.FirstOrDefault(x => x.Value == session).Key);
+                _logger.Information("Client disconnected");
+            }
         }
 
         public void Stop()
@@ -38,52 +92,6 @@ namespace MudBucket.Network
             _isRunning = false;
             _listener.Stop();
             _logger.Information("Server stopped");
-        }
-
-        private async Task AcceptClientsAsync()
-        {
-            try
-            {
-                while (_isRunning)
-                {
-                    var client = await _listener.AcceptTcpClientAsync();
-                    _logger.Information("Client connected");
-                    await HandleClientAsync(client);
-                }
-            }
-            catch (SocketException ex)
-            {
-                if (_isRunning)
-                    _logger.Error("Listener stopped or an error occurred: " + ex.Message);
-            }
-        }
-
-        private async Task HandleClientAsync(TcpClient client)
-        {
-            try
-            {
-                using (var stream = client.GetStream())
-                {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                    {
-                        var message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                        _logger.Debug("Received: " + message);
-                        bool keepConnection = await _commandParser.ParseCommand(message, client);
-                        if (!keepConnection) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("An error occurred with a client: " + ex.Message);
-            }
-            finally
-            {
-                client.Close();
-                _logger.Information("Client disconnected");
-            }
         }
     }
 }

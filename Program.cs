@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MudBucket.Interfaces;
-using MudBucket.Systems;
 using MudBucket.Network;
-using Microsoft.Extensions.Configuration;
 using MudBucket.Services.Commands;
-using MudBucket.Configurations;
+using MudBucket.Services.Logger;
 using MudBucket.Services.Ticks;
+using MudBucket.Systems;
+using System.Net;
 
 namespace MudBucket
 {
@@ -20,14 +21,13 @@ namespace MudBucket
             var serverManager = serviceProvider.GetRequiredService<ServerManager>();
             var tickScheduler = serviceProvider.GetRequiredService<IScheduler>();
 
-            var combatTick = new CombatTick(serviceProvider.GetRequiredService<Interfaces.ILogger>());
-            var repopTick = new RepopTick(serviceProvider.GetRequiredService<Interfaces.ILogger>());
-            var worldTick = new WorldTick(serviceProvider.GetRequiredService<Interfaces.ILogger>());
+            var combatTick = new CombatTick(serviceProvider.GetRequiredService<ILogger>());
+            var repopTick = new RepopTick(serviceProvider.GetRequiredService<ILogger>());
+            var worldTick = new WorldTick(serviceProvider.GetRequiredService<ILogger>());
 
             tickScheduler.ScheduleTickable(combatTick);
             tickScheduler.ScheduleTickable(repopTick);
             tickScheduler.ScheduleTickable(worldTick);
-
 
             try
             {
@@ -44,7 +44,7 @@ namespace MudBucket
             }
             catch (Exception ex)
             {
-                var logger = serviceProvider.GetRequiredService<Interfaces.ILogger>();
+                var logger = serviceProvider.GetRequiredService<ILogger>();
                 logger.Error($"An unexpected error occurred: {ex.Message}");
             }
             finally
@@ -68,24 +68,28 @@ namespace MudBucket
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            // Add logging service
-            services.AddSingleton<Interfaces.ILogger>(LoggerConfig.InitializeLogger(configuration));
+            // Initialize logger from configuration
+            services.AddSingleton<ILogger>(provider => new SerilogLogger(configuration));
 
-            // Add other services required by the application
-            services.AddSingleton<ICommandParser, CommandParser>();
+            // Use CommandHandler for handling commands, assuming it implements ICommandParser
+            services.AddSingleton<CommandHandler>(); // CommandHandler must implement ICommandParser
+            services.AddSingleton<ICommandParser>(provider => provider.GetRequiredService<CommandHandler>());
+
+            // Add scheduler and timer services
             services.AddSingleton<IScheduler, TickScheduler>();
             services.AddSingleton<ITickTimer, GameTickTimer>();
-            services.AddSingleton<TcpServer>(provider =>
-            {
-                var ipAddress = System.Net.IPAddress.Parse(configuration["ApplicationSettings:IPAddress"] ?? "127.0.0.1");
-                var port = int.Parse(configuration["ApplicationSettings:Port"] ?? "8888");
-                return new TcpServer(
+
+            // Configure and add TCP server
+            var ipAddress = IPAddress.Parse(configuration["ApplicationSettings:IPAddress"] ?? "127.0.0.1");
+            var port = int.Parse(configuration["ApplicationSettings:Port"] ?? "8888");
+            services.AddSingleton(provider =>
+                new TcpServer(
                     ipAddress,
                     port,
-                    provider.GetRequiredService<Interfaces.ILogger>(),
-                    provider.GetRequiredService<ICommandParser>());
-            });
+                    provider.GetRequiredService<ILogger>(),
+                    provider.GetRequiredService<CommandHandler>()));
 
+            // Add server manager
             services.AddSingleton<ServerManager>();
 
             // Build the service provider from the service collection
