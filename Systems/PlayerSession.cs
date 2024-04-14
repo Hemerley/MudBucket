@@ -1,110 +1,94 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.Services.Commands;
 using MudBucket.States;
-using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Text;
 
 namespace MudBucket.Systems
 {
     public class PlayerSession
     {
         private readonly TcpClient _client;
-        private IPlayerState _currentState;
-        private readonly CommandHandler _commandHandler;
-        private readonly bool _ansiColorEnabled;
+        private readonly INetworkService _networkService;
+        private readonly ICommandParser _commandParser;
+        private readonly IMessageFormatter _messageFormatter;
+        private readonly IStateManager _stateManager;
 
-        private readonly Dictionary<string, string> _colorMap = new Dictionary<string, string>
-        {
-            {"black", "\u001b[30m"}, {"red", "\u001b[31m"}, {"green", "\u001b[32m"},
-            {"yellow", "\u001b[33m"}, {"blue", "\u001b[34m"}, {"magenta", "\u001b[35m"},
-            {"cyan", "\u001b[36m"}, {"white", "\u001b[37m"}, {"dark_red", "\u001b[31;1m"},
-            {"dark_green", "\u001b[32;1m"}, {"brown", "\u001b[33;1m"}, {"dark_blue", "\u001b[34;1m"},
-            {"purple", "\u001b[35;1m"}, {"light_blue", "\u001b[36;1m"}, {"grey", "\u001b[37;1m"}
-        };
-
-        public PlayerSession(TcpClient client, CommandHandler commandHandler, bool ansiColorEnabled)
+        public PlayerSession(TcpClient client, INetworkService networkService, ICommandParser commandParser, IMessageFormatter messageFormatter, IStateManager stateManager)
         {
             _client = client;
-            _commandHandler = commandHandler;
-            _ansiColorEnabled = ansiColorEnabled;
+            _networkService = networkService;
+            _commandParser = commandParser;
+            _messageFormatter = messageFormatter;
+            _stateManager = stateManager;
             InitializeSession();
         }
 
-        public TcpClient Client => _client;
-
-        private void InitializeSession()
+        private async void InitializeSession()
         {
-            SetState(new NewConnectionState());
-            SendWelcomeMessage();
+            _stateManager.SetState(new NewConnectionState());
+            await SendWelcomeMessage().ConfigureAwait(false);
         }
 
-        public void SendToClient(string message)
+        public async Task ProcessInput(string input)
+        {
+            var success = await _commandParser.ParseCommand(input, _client).ConfigureAwait(false);
+            if (!success)
+            {
+                Console.WriteLine("Failed to process command.");
+            }
+        }
+
+        private async Task SendWelcomeMessage()
+        {
+            string art = @"
+[green]                \||/
+                |  [yellow]@[green]___[red]oo[green]
+      /\  /\   / (__[white],[yellow],[red],[yellow],[green]|
+     ) /^\) ^\/ [yellow]_[white])[green]
+     )   /^\/   [yellow]_[white])[green]
+     )   _ /  / [yellow]_[white])[green]
+ /\  )/\/ ||  | [white])[yellow]_[white])[green]
+<  >      |[white]([yellow],,[white]) )[yellow]__[white])[green]
+ ||      /    \[white])[yellow]___[white])[green]\
+ | \____(      [white])[yellow]___[white]) )[yellow]___[green]
+  \______(_______[yellow];;;[green] __[yellow];;;[green]
+[white]Welcome to MudBucket! Are you a [cyan][new] [white]or [cyan][returning][white] player?";
+            var message = _messageFormatter.FormatMessage(art);
+            await _networkService.SendAsync(message).ConfigureAwait(false);
+        }
+
+        public async Task HandleSession()
         {
             try
             {
-                var stream = _client.GetStream();
-                var formattedMessage = FormatMessage(message);
-                var buffer = Encoding.ASCII.GetBytes(formattedMessage);
-                stream.Write(buffer, 0, buffer.Length);
-                stream.Flush(); // Ensure the data is sent immediately
+                while (_client.Connected)
+                {
+                    string message = await _networkService.ReceiveAsync().ConfigureAwait(false);
+                    if (string.IsNullOrEmpty(message))
+                        break;
+
+                    await ProcessInput(message.Trim()).ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error sending message to client: {ex.Message}");
+                Console.WriteLine($"Error during session: {ex.Message}");
             }
-        }
-
-        public void ProcessInput(string input)
-        {
-            // Placeholder: Handle incoming text input from client
-            // Parse input, determine command or text, then process accordingly
-            _commandHandler.HandleCommandAsync(input, _client);
-        }
-
-        private string FormatMessage(string message)
-        {
-            if (_ansiColorEnabled)
+            finally
             {
-                message = ApplyColorCodes(message) + "\u001b[0m"; // Reset color after message
+                Cleanup();
             }
-            return message + "\r\n"; // Standard new line for MUD clients
         }
 
-        private string ApplyColorCodes(string message)
+        public void Disconnect()
         {
-            foreach (var color in _colorMap)
-            {
-                message = message.Replace($"[{color.Key}]", color.Value);
-            }
-            return message;
+            _client.Close();
         }
 
-        private void SetState(IPlayerState newState)
+        private void Cleanup()
         {
-            _currentState = newState;
+            _networkService.Close();
+            _stateManager.Cleanup();
+            Disconnect();
         }
-
-        private void SendWelcomeMessage()
-        {
-            string art = @"
-[blue]                \||/
-                |  @___oo
-      /\  /\   / (__,,,,|
-     ) /^\) ^\/ _)
-     )   /^\/   _)
-     )   _ /  / _)
- /\  )/\/ ||  | )_)
-<  >      |(,,) )__)
- ||      /    \)___)\
- | \____(      )___) )___
-  \______(_______;;; __;;;
-[red]Welcome to MudBucket![white]
-";
-
-            SendToClient(art);
-        }
-
     }
 }

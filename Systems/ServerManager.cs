@@ -46,7 +46,7 @@ namespace MudBucket
             {
                 _scheduler.ScheduleTickable(tickable);
             }
-            _server.Start();
+            _ = _server.Start();
         }
 
         public void StopServer()

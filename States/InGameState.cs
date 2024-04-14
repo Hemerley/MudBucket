@@ -1,5 +1,4 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.Services.Commands;
 using MudBucket.Systems;
 namespace MudBucket.States
 {
@@ -7,7 +6,7 @@ namespace MudBucket.States
     {
         public void ProcessInput(PlayerSession session, string input)
         {
-            session.ProcessInput(input);
+            _ = session.ProcessInput(input);
         }
     }
 }

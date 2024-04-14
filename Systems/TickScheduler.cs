@@ -6,7 +6,7 @@ namespace MudBucket.Systems
     {
         private readonly Dictionary<ITickable, TimeSpan> _scheduledTickables = new Dictionary<ITickable, TimeSpan>();
         private readonly object _lock = new object();
-        private Task _schedulerTask;
+        private Task? _schedulerTask;
         private bool _isRunning;
 
         public void Start()

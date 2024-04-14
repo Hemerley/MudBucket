@@ -7,7 +7,7 @@ namespace MudBucket.States
     {
         public void ProcessInput(PlayerSession session, string input)
         {
-            session.ProcessInput(input);
+            _ = session.ProcessInput(input);
         }
     }
 }
