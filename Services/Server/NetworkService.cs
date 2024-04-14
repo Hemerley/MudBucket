@@ -1,24 +1,26 @@
 ﻿using MudBucket.Interfaces;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MudBucket.Services.Server
 {
     public class NetworkService : INetworkService
     {
         private readonly TcpClient _client;
+        private readonly IMessageFormatter _messageFormatter;
 
-        public NetworkService(TcpClient client)
+        public NetworkService(TcpClient client, IMessageFormatter messageFormatter)
         {
             _client = client;
+            _messageFormatter = messageFormatter;
         }
 
         public async Task SendAsync(string message)
         {
-            var stream = _client.GetStream();
+            message = _messageFormatter.FormatMessage(message);
             var buffer = Encoding.ASCII.GetBytes(message);
-            await stream.WriteAsync(buffer, 0, buffer.Length);
-            await stream.FlushAsync();
+            await _client.GetStream().WriteAsync(buffer, 0, buffer.Length);
         }
 
         public async Task<string> ReceiveAsync()

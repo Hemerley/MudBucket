@@ -1,6 +1,8 @@
 ﻿using MudBucket.Interfaces;
 using MudBucket.States;
 using System.Net.Sockets;
+using System.Threading.Tasks;
+using System;
 
 namespace MudBucket.Systems
 {
@@ -84,7 +86,7 @@ namespace MudBucket.Systems
             _client.Close();
         }
 
-        private void Cleanup()
+        public void Cleanup() // Changed from private to public
         {
             _networkService.Close();
             _stateManager.Cleanup();

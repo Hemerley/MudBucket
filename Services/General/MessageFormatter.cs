@@ -17,9 +17,9 @@ namespace MudBucket.Services.General
         {
             if (_ansiColorEnabled)
             {
-                message = _ansiColorManager.ApplyColorCodes(message) + _ansiColorManager.ResetColor();
+                message = _ansiColorManager.ApplyColorCodes(message);
             }
-            return message + "\r\n";
+            return message + "\r\n";  // Always add a new line for clean formatting
         }
     }
 }

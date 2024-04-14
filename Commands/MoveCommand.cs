@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using MudBucket.Interfaces;
+using System.Net.Sockets;
 
 namespace MudBucket.Commands
 {
@@ -11,9 +12,9 @@ namespace MudBucket.Commands
             _direction = direction;
         }
 
-        public override bool Execute(TcpClient client)
+        public override async Task<bool> Execute(TcpClient client, INetworkService networkService)
         {
-            SendToClient($"Moving {_direction}", client);
+            await networkService.SendAsync($"[yellow]Attempting to move you: {_direction}");
             return true;
         }
     }

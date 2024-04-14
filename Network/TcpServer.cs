@@ -1,8 +1,11 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Services.Commands;
 using MudBucket.Services.Server;
 using MudBucket.Systems;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MudBucket.Network
 {
@@ -16,8 +19,7 @@ namespace MudBucket.Network
         private readonly ILogger _logger;
         private readonly IMessageFormatter _messageFormatter;
         private readonly IStateManager _stateManager;
-        private readonly Dictionary<int, PlayerSession> _sessions;
-        private int _sessionCounter = 0;
+        private readonly Dictionary<TcpClient, PlayerSession> _sessions;
 
         public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser, IMessageFormatter messageFormatter, IStateManager stateManager)
         {
@@ -28,7 +30,8 @@ namespace MudBucket.Network
             _logger = logger;
             _messageFormatter = messageFormatter;
             _stateManager = stateManager;
-            _sessions = new Dictionary<int, PlayerSession>();
+            _sessions = new Dictionary<TcpClient, PlayerSession>();
+            CommandFactory.Initialize(_sessions); // Initialize CommandFactory with the session map
         }
 
         public bool IsRunning => _isRunning;
@@ -44,10 +47,11 @@ namespace MudBucket.Network
                 {
                     TcpClient client = await _listener.AcceptTcpClientAsync();
                     _logger.Information("Client connected");
-                    var networkService = new NetworkService(client);
+                    // Ensuring NetworkService is properly initialized with a message formatter
+                    var networkService = new NetworkService(client, _messageFormatter);
                     var session = new PlayerSession(client, networkService, _commandParser, _messageFormatter, _stateManager);
-                    _sessions.Add(_sessionCounter++, session);
-                    _ = Task.Run(() => HandleClient(session)).ConfigureAwait(false);
+                    _sessions.Add(client, session);
+                    _ = Task.Run(() => HandleClient(client, session)).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -57,7 +61,7 @@ namespace MudBucket.Network
             }
         }
 
-        private async Task HandleClient(PlayerSession session)
+        private async Task HandleClient(TcpClient client, PlayerSession session)
         {
             try
             {
@@ -69,22 +73,28 @@ namespace MudBucket.Network
             }
             finally
             {
-                CloseSession(session);
+                CloseSession(client);
             }
         }
 
-        private void CloseSession(PlayerSession session)
+        private void CloseSession(TcpClient client)
         {
-            int sessionId = _sessions.FirstOrDefault(x => x.Value == session).Key;
-            session.Disconnect();
-            _sessions.Remove(sessionId);
-            _logger.Information("Client disconnected");
+            if (_sessions.TryGetValue(client, out PlayerSession session))
+            {
+                session.Cleanup();
+                _sessions.Remove(client);
+                _logger.Information("Client disconnected");
+            }
         }
 
         public void Stop()
         {
             _isRunning = false;
             _listener.Stop();
+            foreach (var client in new List<TcpClient>(_sessions.Keys))
+            {
+                CloseSession(client);
+            }
             _logger.Information("Server stopped");
         }
     }

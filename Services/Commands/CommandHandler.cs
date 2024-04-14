@@ -1,5 +1,9 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Services.General;
+using MudBucket.Services.Server;
+using System;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MudBucket.Services.Commands
 {
@@ -12,7 +16,7 @@ namespace MudBucket.Services.Commands
             _logger = logger;
         }
 
-        public async Task<bool> HandleCommandAsync(string command, TcpClient client)
+        public async Task<bool> ParseCommand(string command, TcpClient client)
         {
             try
             {
@@ -21,18 +25,13 @@ namespace MudBucket.Services.Commands
                 var parameter = args.Length > 1 ? args[1] : null;
 
                 ICommand cmd = CommandFactory.CreateCommand(commandType, parameter);
-                return await Task.Run(() => cmd.Execute(client));
+                return await cmd.Execute(client, new NetworkService(client, new MessageFormatter(true))); // Assuming dependency injection provides these
             }
             catch (Exception ex)
             {
                 _logger.Error("Error handling command: " + ex.Message);
                 return false;
             }
-        }
-
-        public Task<bool> ParseCommand(string command, TcpClient client)
-        {
-            return HandleCommandAsync(command, client);
         }
     }
 }

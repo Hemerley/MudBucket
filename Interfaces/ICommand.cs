@@ -1,9 +1,11 @@
-﻿using System.Net.Sockets;
+﻿using MudBucket.Interfaces;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MudBucket.Interfaces
 {
     public interface ICommand
     {
-        bool Execute(TcpClient client);
+        Task<bool> Execute(TcpClient client, INetworkService networkService);
     }
 }
