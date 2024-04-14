@@ -1,4 +1,4 @@
-﻿namespace MudBucket
+﻿namespace MudBucket.Configurations
 {
     public class ApplicationSettings
     {

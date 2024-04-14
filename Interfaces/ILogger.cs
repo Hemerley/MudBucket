@@ -6,5 +6,4 @@
         void Debug(string message);
         void Error(string message);
     }
-
 }

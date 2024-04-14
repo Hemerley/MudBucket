@@ -1,4 +1,5 @@
 ﻿using MudBucket.Interfaces;
+using System;
 
 namespace MudBucket.Services.Ticks
 {
@@ -13,15 +14,13 @@ namespace MudBucket.Services.Ticks
 
         public void Tick()
         {
-            // Log world tick occurrence
-            _logger.Information($"World tick occurred at {DateTime.Now}");
-
-            // Implement world logic here
+            _logger.Information("World tick occurred at " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            // Here, you would handle world updates such as day/night cycles
         }
 
         public TimeSpan GetInterval()
         {
-            return TimeSpan.FromSeconds(45);
+            return TimeSpan.FromSeconds(45);  // Triggers every 45 seconds
         }
     }
 }

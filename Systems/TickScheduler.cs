@@ -52,19 +52,12 @@ namespace MudBucket.Systems
 
                 lock (_lock)
                 {
-                    foreach (var tickable in _scheduledTickables.Keys)
+                    foreach (var tickable in new List<ITickable>(_scheduledTickables.Keys))
                     {
-                        if (_scheduledTickables[tickable] <= TimeSpan.Zero)
+                        var interval = _scheduledTickables[tickable];
+                        if (interval <= TimeSpan.Zero)
                         {
-                            try
-                            {
-                                tickable.Tick();
-                            }
-                            catch (Exception ex)
-                            {
-                                // Handle tickable exceptions
-                            }
-
+                            tickable.Tick();
                             _scheduledTickables[tickable] = tickable.GetInterval(); // Reset interval
                         }
                         else

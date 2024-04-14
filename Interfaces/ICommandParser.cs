@@ -4,6 +4,6 @@ namespace MudBucket.Interfaces
 {
     public interface ICommandParser
     {
-        bool ParseCommand(string command, TcpClient client);
+        Task<bool> ParseCommand(string command, TcpClient client);
     }
 }

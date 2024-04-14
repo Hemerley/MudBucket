@@ -1,4 +1,5 @@
 ﻿using MudBucket.Interfaces;
+using System;
 
 namespace MudBucket.Services.Ticks
 {
@@ -13,15 +14,13 @@ namespace MudBucket.Services.Ticks
 
         public void Tick()
         {
-            // Log combat tick occurrence
-            _logger.Information($"Combat tick occurred at {DateTime.Now}");
-
-            // Implement combat logic here
+            _logger.Information("Combat tick occurred at " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            // Implement additional combat logic here
         }
 
         public TimeSpan GetInterval()
         {
-            return TimeSpan.FromSeconds(1); // Specify the interval for combat ticks
+            return TimeSpan.FromSeconds(1);  // Triggers every second
         }
     }
 }

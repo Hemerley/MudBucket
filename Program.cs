@@ -1,75 +1,95 @@
-﻿using Microsoft.Extensions.Configuration;
-using MudBucket;
+﻿using Microsoft.Extensions.DependencyInjection;
 using MudBucket.Interfaces;
-using MudBucket.Network;
-using MudBucket.Services.Commands;
-using MudBucket.Services.Logger;
-using MudBucket.Services.Ticks;
 using MudBucket.Systems;
-using Serilog;
-using System.Net;
+using MudBucket.Network;
+using Microsoft.Extensions.Configuration;
+using MudBucket.Services.Commands;
+using MudBucket.Configurations;
+using MudBucket.Services.Ticks;
 
-class Program
+namespace MudBucket
 {
-    static async Task Main(string[] args)
+    class Program
     {
-        // Load configuration from appsettings.json
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
-
-        // Configure and initialize Serilog for logging
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
-
-        try
+        static void Main(string[] args)
         {
-            Log.Information("Starting server...");
-            var appSettings = configuration.GetSection("ApplicationSettings").Get<ApplicationSettings>();
+            // Configure services and build the service provider
+            var serviceProvider = ConfigureServices();
 
-            // Determine the IP address to bind the server to
-            IPAddress ipAddress = IPAddress.Parse(appSettings.IPAddress.Equals("Any", StringComparison.OrdinalIgnoreCase) ? "0.0.0.0" : appSettings.IPAddress);
+            // Retrieve required services from the DI container
+            var serverManager = serviceProvider.GetRequiredService<ServerManager>();
+            var tickScheduler = serviceProvider.GetRequiredService<IScheduler>();
 
-            // Setup logger and command parser
-            MudBucket.Interfaces.ILogger logger = new SerilogLogger();
-            ICommandParser commandParser = new CommandParser();
+            var combatTick = new CombatTick(serviceProvider.GetRequiredService<Interfaces.ILogger>());
+            var repopTick = new RepopTick(serviceProvider.GetRequiredService<Interfaces.ILogger>());
+            var worldTick = new WorldTick(serviceProvider.GetRequiredService<Interfaces.ILogger>());
 
-            // Initialize the tick scheduler, timer, and server
-            var tickScheduler = new TickScheduler(); // Create an instance of TickScheduler
-            ITickTimer tickTimer = new GameTickTimer(tickScheduler); // Pass the scheduler to GameTickTimer
-            TcpServer server = new TcpServer(ipAddress, appSettings.Port, logger, commandParser);
-            ServerManager serverManager = new ServerManager(tickScheduler, server);
+            tickScheduler.ScheduleTickable(combatTick);
+            tickScheduler.ScheduleTickable(repopTick);
+            tickScheduler.ScheduleTickable(worldTick);
 
-            // Register tickable entities
-            WorldTick worldTick = new WorldTick(logger);
-            CombatTick combatTick = new CombatTick(logger);
-            RepopTick repopTick = new RepopTick(logger);
 
-            serverManager.RegisterTickable(worldTick);
-            serverManager.RegisterTickable(combatTick);
-            serverManager.RegisterTickable(repopTick);
+            try
+            {
+                // Start the scheduler and the server
+                tickScheduler.Start();
+                serverManager.StartServer();
+                Console.WriteLine("Server and scheduler are running. Press any key to stop...");
 
-            // Start the server
-            serverManager.StartServer();
+                Console.ReadKey(); // Wait for user input to stop the server
 
-            // Start the tick scheduler
-            tickScheduler.Start();
-
-            Log.Information("Press any key to stop the server...");
-            Console.ReadKey();
-
-            // Stop the server
-            serverManager.StopServer();
+                // Stop the server and scheduler upon user request
+                serverManager.StopServer();
+                tickScheduler.Stop();
+            }
+            catch (Exception ex)
+            {
+                var logger = serviceProvider.GetRequiredService<Interfaces.ILogger>();
+                logger.Error($"An unexpected error occurred: {ex.Message}");
+            }
+            finally
+            {
+                // Proper cleanup: Dispose of the service provider and its services
+                if (serviceProvider is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+                Console.WriteLine("Server and scheduler stopped successfully.");
+            }
         }
-        catch (Exception ex)
+
+        private static ServiceProvider ConfigureServices()
         {
-            Log.Fatal(ex, "Failed to start server");
-        }
-        finally
-        {
-            // Ensure the log buffer is flushed before the application exits
-            Log.CloseAndFlush();
+            // Create a new instance of service collection
+            var services = new ServiceCollection();
+
+            // Add configuration setup
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            // Add logging service
+            services.AddSingleton<Interfaces.ILogger>(LoggerConfig.InitializeLogger(configuration));
+
+            // Add other services required by the application
+            services.AddSingleton<ICommandParser, CommandParser>();
+            services.AddSingleton<IScheduler, TickScheduler>();
+            services.AddSingleton<ITickTimer, GameTickTimer>();
+            services.AddSingleton<TcpServer>(provider =>
+            {
+                var ipAddress = System.Net.IPAddress.Parse(configuration["ApplicationSettings:IPAddress"] ?? "127.0.0.1");
+                var port = int.Parse(configuration["ApplicationSettings:Port"] ?? "8888");
+                return new TcpServer(
+                    ipAddress,
+                    port,
+                    provider.GetRequiredService<Interfaces.ILogger>(),
+                    provider.GetRequiredService<ICommandParser>());
+            });
+
+            services.AddSingleton<ServerManager>();
+
+            // Build the service provider from the service collection
+            return services.BuildServiceProvider();
         }
     }
 }

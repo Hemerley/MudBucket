@@ -1,5 +1,7 @@
 ﻿using MudBucket.Interfaces;
+using System;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MudBucket.Services.Commands
 {
@@ -18,7 +20,7 @@ namespace MudBucket.Services.Commands
         {
             try
             {
-                return _commandParser.ParseCommand(command, client);
+                return await _commandParser.ParseCommand(command, client);
             }
             catch (Exception ex)
             {

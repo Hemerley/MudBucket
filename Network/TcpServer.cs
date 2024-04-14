@@ -1,15 +1,16 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.Services.Commands;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MudBucket.Network
 {
     public class TcpServer
     {
         private readonly ILogger _logger;
-        private readonly CommandHandler _commandHandler;
+        private readonly ICommandParser _commandParser;
         private TcpListener _listener;
         private readonly int _port;
         private bool _isRunning;
@@ -19,7 +20,7 @@ namespace MudBucket.Network
         public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser)
         {
             _logger = logger;
-            _commandHandler = new CommandHandler(commandParser, logger);
+            _commandParser = commandParser;
             _port = port;
             _listener = new TcpListener(ipAddress, port);
         }
@@ -47,11 +48,7 @@ namespace MudBucket.Network
                 {
                     var client = await _listener.AcceptTcpClientAsync();
                     _logger.Information("Client connected");
-                    HandleClientAsync(client).ContinueWith(t =>
-                    {
-                        if (t.Exception != null)
-                            _logger.Error("Error handling client: " + t.Exception.Flatten().InnerException.Message);
-                    }, TaskContinuationOptions.OnlyOnFaulted);
+                    await HandleClientAsync(client);
                 }
             }
             catch (SocketException ex)
@@ -65,16 +62,15 @@ namespace MudBucket.Network
         {
             try
             {
-                using (NetworkStream stream = client.GetStream())
+                using (var stream = client.GetStream())
                 {
                     byte[] buffer = new byte[1024];
                     int bytesRead;
-
                     while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                     {
                         var message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                         _logger.Debug("Received: " + message);
-                        bool keepConnection = await _commandHandler.HandleCommandAsync(message, client);
+                        bool keepConnection = await _commandParser.ParseCommand(message, client);
                         if (!keepConnection) break;
                     }
                 }
@@ -85,10 +81,7 @@ namespace MudBucket.Network
             }
             finally
             {
-                if (client.Connected)
-                {
-                    client.Close();
-                }
+                client.Close();
                 _logger.Information("Client disconnected");
             }
         }

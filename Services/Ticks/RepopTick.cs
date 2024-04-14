@@ -14,16 +14,13 @@ namespace MudBucket.Services.Ticks
 
         public void Tick()
         {
-            // Log repop tick occurrence
-            _logger.Information($"Repop tick occurred at {DateTime.Now}");
-
-            // Implement repop logic here
+            _logger.Information("Repop tick occurred at " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            // Implement logic for repopulating or refreshing game elements
         }
 
         public TimeSpan GetInterval()
         {
-            // Adjust the interval as needed
-            return TimeSpan.FromMinutes(3);
+            return TimeSpan.FromMinutes(3);  // Triggers every 3 minutes
         }
     }
 }
