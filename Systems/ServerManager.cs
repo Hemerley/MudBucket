@@ -52,7 +52,7 @@ namespace MudBucket
                 _cts.Cancel();  // Cancel the task using the CancellationToken
                 _isShutdownInitiated = false;
                 Console.WriteLine("Shutdown aborted.");
-                _server.BroadcastMessage("[white][[server_warning]Warning[white]][server] The server shutdown has been aborted[white].");
+                _server.BroadcastMessage("[white][[server_info]INFO[white]][server] The server shutdown has been aborted[white].");
             }
         }
 

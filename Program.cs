@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MudBucket.Configurations;
 using MudBucket.Interfaces;
+using MudBucket.Network;
+using MudBucket.Services.Commands;
 using MudBucket.Services.Ticks;
+using MudBucket.Systems;
 using System;
 using System.Threading.Tasks;
 
@@ -13,10 +17,15 @@ namespace MudBucket
             var serviceProvider = ConfigureServices();
             var serverManager = serviceProvider.GetRequiredService<ServerManager>();
             var tickScheduler = serviceProvider.GetRequiredService<IScheduler>();
+            var server = serviceProvider.GetRequiredService<TcpServer>();
 
+            // Schedule ticks for combat, repopulation, and world updates
             tickScheduler.ScheduleTickable(new CombatTick(serviceProvider.GetRequiredService<ILogger>()));
             tickScheduler.ScheduleTickable(new RepopTick(serviceProvider.GetRequiredService<ILogger>()));
             tickScheduler.ScheduleTickable(new WorldTick(serviceProvider.GetRequiredService<ILogger>()));
+
+            // Initialize CommandFactory with the session map from TcpServer
+            CommandFactory.Initialize(server.Sessions);
 
             try
             {
@@ -24,9 +33,8 @@ namespace MudBucket
                 serverManager.StartServer();
                 Console.WriteLine("Server and scheduler are running. Type 'shutdown' to shut down gracefully, 'abort' to abort the shutdown, or 'quit' to exit immediately.");
 
-                // Changes here: Wrap command listening in a task and await it
-                await Task.Run(() => ListenForConsoleCommands(serverManager));
-
+                // Listening for console commands in an asynchronous task
+                await Task.Run(() => ListenForConsoleCommands(serverManager, server));
             }
             catch (Exception ex)
             {
@@ -43,7 +51,7 @@ namespace MudBucket
             }
         }
 
-        private static void ListenForConsoleCommands(ServerManager serverManager)
+        private static void ListenForConsoleCommands(ServerManager serverManager, TcpServer server)
         {
             while (true)
             {
@@ -52,13 +60,14 @@ namespace MudBucket
                 {
                     case "shutdown":
                         serverManager.InitiateShutdown();
-                        break; // Do not return immediately.
+                        break;
                     case "abort":
                         serverManager.AbortShutdown();
                         break;
                     case "quit":
+                        server.BroadcastMessage("[white][[server_info]INFO[white]][server]Server is shutting down immediately[white]. [server]Thank you for playing[white]!");
                         Console.WriteLine("Exiting immediately...");
-                        Environment.Exit(0);
+                        Environment.Exit(0); // Exit should happen after message is sent
                         break;
                     default:
                         Console.WriteLine("Unknown command. Available commands: shutdown, abort, quit");
