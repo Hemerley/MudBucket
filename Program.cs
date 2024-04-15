@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MudBucket.Interfaces;
 using MudBucket.Services.Ticks;
+using System;
+using System.Threading.Tasks;
 
 namespace MudBucket
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var serviceProvider = ConfigureServices();
             var serverManager = serviceProvider.GetRequiredService<ServerManager>();
@@ -20,11 +22,11 @@ namespace MudBucket
             {
                 tickScheduler.Start();
                 serverManager.StartServer();
-                Console.WriteLine("Server and scheduler are running. Press any key to stop...");
+                Console.WriteLine("Server and scheduler are running. Type 'shutdown' to shut down gracefully, 'abort' to abort the shutdown, or 'quit' to exit immediately.");
 
-                Console.ReadKey();
-                serverManager.StopServer();
-                tickScheduler.Stop();
+                // Changes here: Wrap command listening in a task and await it
+                await Task.Run(() => ListenForConsoleCommands(serverManager));
+
             }
             catch (Exception ex)
             {
@@ -38,6 +40,30 @@ namespace MudBucket
                     disposable.Dispose();
                 }
                 Console.WriteLine("Server and scheduler stopped successfully.");
+            }
+        }
+
+        private static void ListenForConsoleCommands(ServerManager serverManager)
+        {
+            while (true)
+            {
+                var command = Console.ReadLine()?.Trim().ToLower();
+                switch (command)
+                {
+                    case "shutdown":
+                        serverManager.InitiateShutdown();
+                        break; // Do not return immediately.
+                    case "abort":
+                        serverManager.AbortShutdown();
+                        break;
+                    case "quit":
+                        Console.WriteLine("Exiting immediately...");
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Unknown command. Available commands: shutdown, abort, quit");
+                        break;
+                }
             }
         }
 

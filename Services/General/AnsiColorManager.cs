@@ -23,7 +23,23 @@
             {"bright_blue", "\u001b[34;1m"}, // Bright Blue
             {"bright_magenta", "\u001b[35;1m"}, // Bright Magenta
             {"bright_cyan", "\u001b[36;1m"}, // Bright Cyan
-            {"bright_white", "\u001b[37;1m"} // Bright White
+            {"bright_white", "\u001b[37;1m"}, // Bright White
+
+            // System Colors
+            {"reset", "\u001b[0m" }, // Reset color
+            {"bold", "\u001b[1m" }, // Bold
+            {"underline", "\u001b[4m" }, // Underline
+            {"blink", "\u001b[5m" }, // Blink
+            {"reverse", "\u001b[7m" }, // Reverse
+            {"invisible", "\u001b[8m" }, // Invisible
+
+            // Server Colors
+            {"server", "\u001b[36;1m" }, // Bright Cyan
+            {"server_error", "\u001b[31;1m" }, // Bright Red
+            {"server_warning", "\u001b[33;1m" }, // Bright Yellow
+            {"server_info", "\u001b[32;1m" }, // Bright Green
+            {"server_debug", "\u001b[35;1m" }, // Bright Magenta
+
         };
 
         public string ApplyColorCodes(string message)
@@ -32,7 +48,7 @@
             {
                 message = message.Replace($"[{color.Key}]", color.Value);
             }
-            return message;
+            return message + ResetColor();
         }
 
         public string ResetColor() => "\u001b[0m";

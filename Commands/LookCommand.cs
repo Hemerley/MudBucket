@@ -8,7 +8,7 @@ namespace MudBucket.Commands
     {
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService)
         {
-            await networkService.SendAsync("[bright_yellow]You look around and see...");
+            await networkService.SendAsync("[white][[server_info]INFO[white]][server]You look around and see[white]...");
             return true;
         }
     }

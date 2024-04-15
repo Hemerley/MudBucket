@@ -53,9 +53,14 @@ namespace MudBucket.Systems
  ||      /    \[white])[yellow]___[white])[green]\
  | \____(      [white])[yellow]___[white]) )[yellow]___[green]
   \______(_______[yellow];;;[green] __[yellow];;;[green]
-[white]Welcome to MudBucket! Are you a [cyan][new] [white]or [cyan][returning][white] player?";
-            var message = _messageFormatter.FormatMessage(art);
-            await _networkService.SendAsync(message).ConfigureAwait(false);
+[server]Welcome to MudBucket[white]![server] Are you a [server_info][new] [server]or [server_info][returning][server] player[white]?";
+            await SendMessageAsync(art).ConfigureAwait(false);
+        }
+
+        public async Task SendMessageAsync(string message)
+        {
+            var formattedMessage = _messageFormatter.FormatMessage(message);
+            await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
         }
 
         public async Task HandleSession()
@@ -86,7 +91,7 @@ namespace MudBucket.Systems
             _client.Close();
         }
 
-        public void Cleanup() // Changed from private to public
+        public void Cleanup()
         {
             _networkService.Close();
             _stateManager.Cleanup();

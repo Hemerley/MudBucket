@@ -1,9 +1,7 @@
 ﻿using MudBucket.Interfaces;
 using MudBucket.Services.General;
 using MudBucket.Services.Server;
-using System;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace MudBucket.Services.Commands
 {
@@ -25,7 +23,7 @@ namespace MudBucket.Services.Commands
                 var parameter = args.Length > 1 ? args[1] : null;
 
                 ICommand cmd = CommandFactory.CreateCommand(commandType, parameter);
-                return await cmd.Execute(client, new NetworkService(client, new MessageFormatter(true))); // Assuming dependency injection provides these
+                return await cmd.Execute(client, new NetworkService(client, new MessageFormatter(true)));
             }
             catch (Exception ex)
             {

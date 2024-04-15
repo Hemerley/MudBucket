@@ -15,7 +15,7 @@ namespace MudBucket.Commands
 
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService)
         {
-            await networkService.SendAsync($"[bright_yellow]Attempting to move you: {_direction}");
+            await networkService.SendAsync($"[white][[server_info]INFO[white]][server]Attempting to move you[white]:[server_info] {_direction}");
             return true;
         }
     }

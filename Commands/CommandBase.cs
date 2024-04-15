@@ -15,12 +15,11 @@ namespace MudBucket.Commands
             }
             catch (Exception ex)
             {
-                await networkService.SendAsync($"[bright_red]Error executing command: {ex.Message}");
+                await networkService.SendAsync($"[white][[server_error]ERROR[white]][server]Error executing command[white]:[server] {ex.Message}");
                 return false;
             }
         }
 
-        // Each derived command class must implement this method.
         protected abstract Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService);
     }
 }

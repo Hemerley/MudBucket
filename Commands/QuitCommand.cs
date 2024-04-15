@@ -1,10 +1,7 @@
 ﻿using MudBucket.Commands;
 using MudBucket.Interfaces;
 using MudBucket.Systems;
-using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 public class QuitCommand : CommandBase
 {
@@ -19,7 +16,7 @@ public class QuitCommand : CommandBase
     {
         if (_sessionMap.TryGetValue(client, out PlayerSession session))
         {
-            await networkService.SendAsync("[bright_green]Goodbye!");
+            await networkService.SendAsync("[white][[server_info]INFO[white]][server]You have been successfully disconnected[white],[server] Goodbye[white]!");
             session.Cleanup();
             return true;
         }

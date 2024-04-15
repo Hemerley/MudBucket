@@ -1,7 +1,7 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.Services.Commands;
 using MudBucket.Services.Server;
 using MudBucket.Systems;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -31,7 +31,6 @@ namespace MudBucket.Network
             _messageFormatter = messageFormatter;
             _stateManager = stateManager;
             _sessions = new Dictionary<TcpClient, PlayerSession>();
-            CommandFactory.Initialize(_sessions); // Initialize CommandFactory with the session map
         }
 
         public bool IsRunning => _isRunning;
@@ -41,13 +40,13 @@ namespace MudBucket.Network
             _listener.Start();
             _isRunning = true;
             _logger.Information($"Server started on port {_port}");
+
             try
             {
                 while (_isRunning)
                 {
                     TcpClient client = await _listener.AcceptTcpClientAsync();
                     _logger.Information("Client connected");
-                    // Ensuring NetworkService is properly initialized with a message formatter
                     var networkService = new NetworkService(client, _messageFormatter);
                     var session = new PlayerSession(client, networkService, _commandParser, _messageFormatter, _stateManager);
                     _sessions.Add(client, session);
@@ -58,6 +57,25 @@ namespace MudBucket.Network
             {
                 _logger.Error($"Server encountered an error: {ex.Message}");
                 Stop();
+            }
+        }
+
+        public void Stop()
+        {
+            _isRunning = false;
+            _listener.Stop();
+            foreach (var client in new List<TcpClient>(_sessions.Keys))
+            {
+                CloseSession(client);
+            }
+            _logger.Information("Server stopped");
+        }
+
+        public void BroadcastMessage(string message)
+        {
+            foreach (var session in _sessions.Values)
+            {
+                _ = session.SendMessageAsync(message);
             }
         }
 
@@ -79,7 +97,7 @@ namespace MudBucket.Network
 
         private void CloseSession(TcpClient client)
         {
-            if (_sessions.TryGetValue(client, out PlayerSession session))
+            if (_sessions.TryGetValue(client, out var session))
             {
                 session.Cleanup();
                 _sessions.Remove(client);
@@ -87,15 +105,6 @@ namespace MudBucket.Network
             }
         }
 
-        public void Stop()
-        {
-            _isRunning = false;
-            _listener.Stop();
-            foreach (var client in new List<TcpClient>(_sessions.Keys))
-            {
-                CloseSession(client);
-            }
-            _logger.Information("Server stopped");
-        }
+        public Dictionary<TcpClient, PlayerSession> Sessions => _sessions;
     }
 }
