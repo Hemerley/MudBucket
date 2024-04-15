@@ -1,7 +1,10 @@
 ﻿using MudBucket.Commands;
 using MudBucket.Interfaces;
 using MudBucket.Systems;
+using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 public class QuitCommand : CommandBase
 {
@@ -12,11 +15,11 @@ public class QuitCommand : CommandBase
         _sessionMap = sessionMap;
     }
 
-    public override async Task<bool> Execute(TcpClient client, INetworkService networkService)
+    protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService)
     {
         if (_sessionMap.TryGetValue(client, out PlayerSession session))
         {
-            await networkService.SendAsync("[green]Goodbye!");
+            await networkService.SendAsync("[bright_green]Goodbye!");
             session.Cleanup();
             return true;
         }

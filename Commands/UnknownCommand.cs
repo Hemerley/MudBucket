@@ -1,13 +1,14 @@
 ﻿using MudBucket.Interfaces;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MudBucket.Commands
 {
     public class UnknownCommand : CommandBase
     {
-        public override async Task<bool> Execute(TcpClient client, INetworkService networkService)
+        protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService)
         {
-            await networkService.SendAsync("Arf, Arf! Bucket doesn't understand!");
+            await networkService.SendAsync("[bright_red]Arf, Arf! Bucket doesn't understand!");
             return true;
         }
     }

@@ -1,13 +1,14 @@
 ﻿using MudBucket.Interfaces;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MudBucket.Commands
 {
     public class LookCommand : CommandBase
     {
-        public override async Task<bool> Execute(TcpClient client, INetworkService networkService)
+        protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService)
         {
-            await networkService.SendAsync("[yellow]You look around and see...");
+            await networkService.SendAsync("[bright_yellow]You look around and see...");
             return true;
         }
     }
