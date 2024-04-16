@@ -2,7 +2,6 @@
 {
     public interface IJsonLoader
     {
-        T LoadData<T>(string filePath);
+        T LoadData<T>(string filePath, bool isEncrypted);
     }
-
 }

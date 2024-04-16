@@ -1,11 +1,26 @@
-﻿namespace MudBucket.Structures
+﻿using System.Collections.Generic;
+
+namespace MudBucket.Structures
 {
+    public enum ItemType
+    {
+        Weapon,
+        Armor,
+        Consumable,
+        Quest,
+        Key,
+        Misc
+    }
+
     public class Item
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsEquippable { get; set; }
         public bool IsConsumable { get; set; }
+        public ItemType Type { get; set; }
+        public int Weight { get; set; }
+        public int Value { get; set; }
         public Dictionary<string, int> Effects { get; set; }
 
         public Item()
@@ -26,6 +41,16 @@
                     }
                 }
             }
+            else if (IsEquippable)
+            {
+                Equip(player);
+            }
+        }
+
+        private void Equip(Player player)
+        {
+            // Placeholder for equipping logic
+            player.SendMessage($"{Name} equipped.");
         }
     }
 }

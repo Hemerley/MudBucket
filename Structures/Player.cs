@@ -1,4 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 
 namespace MudBucket.Structures
@@ -8,7 +10,7 @@ namespace MudBucket.Structures
         public string Name { get; set; }
         public TcpClient Client { get; private set; }
         public string Race { get; set; }
-        public string Class { get; set; }
+        public string PlayerClass { get; set; }
         public int Level { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
@@ -20,6 +22,10 @@ namespace MudBucket.Structures
         public int TriviaPoints { get; set; }
         public int QuestPoints { get; set; }
         public int Experience { get; set; }
+        public int CampaignPoints { get; set; }
+        public int Tier { get; set; } // New property for tier
+        public bool HeroStatus { get; set; } // New property for hero status
+        public int Remort { get; set; } // New property for remort
         public Room CurrentRoom { get; set; }
         public Dictionary<string, int> Attributes { get; set; }
         public List<Item> Inventory { get; set; }
@@ -45,6 +51,10 @@ namespace MudBucket.Structures
             Equipment = new Dictionary<EquipmentSlot, Item>();
             Quests = new List<Quest>();
             InitializeEquipmentSlots();
+            CampaignPoints = 0;
+            Tier = 1; // Default tier
+            HeroStatus = false; // Default hero status
+            Remort = 0; // Default remort count
         }
 
         private void InitializeEquipmentSlots()

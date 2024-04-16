@@ -6,7 +6,7 @@ namespace MudBucket.Services.Json
 {
     public class GenericJsonWriter : IJsonWriter
     {
-        public void WriteData<T>(T data, string filePath)
+        public void WriteData<T>(T data, string filePath, bool encrypt)
         {
             try
             {
@@ -15,8 +15,11 @@ namespace MudBucket.Services.Json
                     WriteIndented = true
                 };
                 string jsonContent = JsonSerializer.Serialize(data, options);
-                string encryptedJsonContent = CryptoUtils.EncryptString(jsonContent);
-                File.WriteAllText(filePath, encryptedJsonContent);
+                if (encrypt)
+                {
+                    jsonContent = CryptoUtils.EncryptString(jsonContent);
+                }
+                File.WriteAllText(filePath, jsonContent);
             }
             catch (Exception ex)
             {

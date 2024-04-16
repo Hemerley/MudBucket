@@ -6,13 +6,16 @@ namespace MudBucket.Services.Json
 {
     public class GenericJsonLoader : IJsonLoader
     {
-        public T LoadData<T>(string filePath)
+        public T LoadData<T>(string filePath, bool isEncrypted)
         {
             try
             {
-                string encryptedJsonContent = File.ReadAllText(filePath);
-                string decryptedJsonContent = CryptoUtils.DecryptString(encryptedJsonContent);
-                return JsonSerializer.Deserialize<T>(decryptedJsonContent);
+                string jsonContent = File.ReadAllText(filePath);
+                if (isEncrypted)
+                {
+                    jsonContent = CryptoUtils.DecryptString(jsonContent);
+                }
+                return JsonSerializer.Deserialize<T>(jsonContent);
             }
             catch (Exception ex)
             {

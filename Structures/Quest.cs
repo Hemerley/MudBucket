@@ -1,4 +1,7 @@
-﻿namespace MudBucket.Structures
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace MudBucket.Structures
 {
     public class Quest
     {
@@ -52,5 +55,4 @@
             player.SendMessage($"Objective completed: {Description}");
         }
     }
-
 }

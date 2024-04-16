@@ -1,4 +1,6 @@
-﻿namespace MudBucket.Structures
+﻿using System.Collections.Generic;
+
+namespace MudBucket.Structures
 {
     public class Mob
     {
@@ -24,6 +26,17 @@
             {
                 player.SendMessage("You have died!");
             }
+        }
+
+        public void Move(Room newRoom)
+        {
+            CurrentRoom = newRoom;
+            // Additional logic for moving the mob to a new room
+        }
+
+        public void Die()
+        {
+            // Additional logic for when the mob dies
         }
     }
 }
