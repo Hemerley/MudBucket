@@ -1,38 +1,50 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.States;
 using System.Net.Sockets;
-using System.Threading.Tasks;
-using System;
 
 namespace MudBucket.Systems
 {
+    public enum SessionState
+    {
+        JustConnected,
+        Playing
+    }
+
     public class PlayerSession
     {
         private readonly TcpClient _client;
         private readonly INetworkService _networkService;
         private readonly ICommandParser _commandParser;
         private readonly IMessageFormatter _messageFormatter;
-        private readonly IStateManager _stateManager;
+        private SessionState _currentState;
 
-        public PlayerSession(TcpClient client, INetworkService networkService, ICommandParser commandParser, IMessageFormatter messageFormatter, IStateManager stateManager)
+        public PlayerSession(TcpClient client, INetworkService networkService, ICommandParser commandParser, IMessageFormatter messageFormatter)
         {
             _client = client;
             _networkService = networkService;
             _commandParser = commandParser;
             _messageFormatter = messageFormatter;
-            _stateManager = stateManager;
+            _currentState = SessionState.JustConnected;
             InitializeSession();
+        }
+
+        public SessionState CurrentState => _currentState;
+
+        public void ChangeStateToPlaying()
+        {
+            if (_currentState == SessionState.JustConnected)
+            {
+                _currentState = SessionState.Playing;
+            }
         }
 
         private async void InitializeSession()
         {
-            _stateManager.SetState(new NewConnectionState());
             await SendWelcomeMessage().ConfigureAwait(false);
         }
 
         public async Task ProcessInput(string input)
         {
-            var success = await _commandParser.ParseCommand(input, _client).ConfigureAwait(false);
+            var success = await _commandParser.ParseCommand(input, _client, this).ConfigureAwait(false);
             if (!success)
             {
                 Console.WriteLine("Failed to process command.");
@@ -94,7 +106,6 @@ namespace MudBucket.Systems
         public void Cleanup()
         {
             _networkService.Close();
-            _stateManager.Cleanup();
             Disconnect();
         }
     }

@@ -7,7 +7,6 @@ using MudBucket.Interfaces.MudBucket.Interfaces;
 using MudBucket.Network;
 using MudBucket.Services.Commands;
 using MudBucket.Services.General;
-using MudBucket.Services.Server;
 using MudBucket.Systems;
 using System.Net;
 
@@ -28,7 +27,7 @@ public class Startup
         services.AddSingleton<ITickTimer, GameTickTimer>();
 
         services.AddSingleton<IMessageFormatter>(provider => new MessageFormatter(true));
-        services.AddSingleton<IStateManager, StateManager>();
+        // Removed IStateManager, StateManager
 
         var ipAddress = IPAddress.Parse(configuration["ApplicationSettings:IPAddress"] ?? "127.0.0.1");
         var port = int.Parse(configuration["ApplicationSettings:Port"] ?? "8888");
@@ -38,8 +37,7 @@ public class Startup
                 port,
                 provider.GetRequiredService<ILogger>(),
                 provider.GetRequiredService<ICommandParser>(),
-                provider.GetRequiredService<IMessageFormatter>(),
-                provider.GetRequiredService<IStateManager>()));
+                provider.GetRequiredService<IMessageFormatter>()));
 
         services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
 

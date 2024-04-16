@@ -1,11 +1,8 @@
 ﻿using MudBucket.Interfaces;
 using MudBucket.Services.Server;
 using MudBucket.Systems;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace MudBucket.Network
 {
@@ -18,10 +15,9 @@ namespace MudBucket.Network
         private readonly ICommandParser _commandParser;
         private readonly ILogger _logger;
         private readonly IMessageFormatter _messageFormatter;
-        private readonly IStateManager _stateManager;
         private readonly Dictionary<TcpClient, PlayerSession> _sessions;
 
-        public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser, IMessageFormatter messageFormatter, IStateManager stateManager)
+        public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser, IMessageFormatter messageFormatter)
         {
             _ipAddress = ipAddress;
             _port = port;
@@ -29,7 +25,6 @@ namespace MudBucket.Network
             _commandParser = commandParser;
             _logger = logger;
             _messageFormatter = messageFormatter;
-            _stateManager = stateManager;
             _sessions = new Dictionary<TcpClient, PlayerSession>();
         }
 
@@ -48,9 +43,9 @@ namespace MudBucket.Network
                     TcpClient client = await _listener.AcceptTcpClientAsync();
                     _logger.Information("Client connected");
                     var networkService = new NetworkService(client, _messageFormatter);
-                    var session = new PlayerSession(client, networkService, _commandParser, _messageFormatter, _stateManager);
+                    var session = new PlayerSession(client, networkService, _commandParser, _messageFormatter);
                     _sessions.Add(client, session);
-                    _ = Task.Run(() => HandleClient(client, session)).ConfigureAwait(false);
+                    _ = Task.Run(() => session.HandleSession());
                 }
             }
             catch (Exception ex)
@@ -76,22 +71,6 @@ namespace MudBucket.Network
             foreach (var session in _sessions.Values)
             {
                 _ = session.SendMessageAsync(message);
-            }
-        }
-
-        private async Task HandleClient(TcpClient client, PlayerSession session)
-        {
-            try
-            {
-                await session.HandleSession();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Error handling client session: {ex.Message}");
-            }
-            finally
-            {
-                CloseSession(client);
             }
         }
 

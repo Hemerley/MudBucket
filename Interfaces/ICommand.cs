@@ -1,11 +1,11 @@
-﻿using MudBucket.Interfaces;
+﻿using MudBucket.Systems;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace MudBucket.Interfaces
 {
     public interface ICommand
     {
-        Task<bool> Execute(TcpClient client, INetworkService networkService);
+        SessionState[] ValidStates { get; }
+        Task<bool> Execute(TcpClient client, INetworkService networkService, PlayerSession session);
     }
 }

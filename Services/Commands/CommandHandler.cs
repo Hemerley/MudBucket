@@ -1,6 +1,7 @@
 ﻿using MudBucket.Interfaces;
 using MudBucket.Services.General;
 using MudBucket.Services.Server;
+using MudBucket.Systems;
 using System.Net.Sockets;
 
 namespace MudBucket.Services.Commands
@@ -14,7 +15,7 @@ namespace MudBucket.Services.Commands
             _logger = logger;
         }
 
-        public async Task<bool> ParseCommand(string command, TcpClient client)
+        public async Task<bool> ParseCommand(string command, TcpClient client, PlayerSession session)
         {
             try
             {
@@ -23,7 +24,15 @@ namespace MudBucket.Services.Commands
                 var parameter = args.Length > 1 ? args[1] : null;
 
                 ICommand cmd = CommandFactory.CreateCommand(commandType, parameter);
-                return await cmd.Execute(client, new NetworkService(client, new MessageFormatter(true)));
+                if (cmd.ValidStates.Contains(session.CurrentState))
+                {
+                    return await cmd.Execute(client, new NetworkService(client, new MessageFormatter(true)), session);
+                }
+                else
+                {
+                    await session.SendMessageAsync("[white][[server_warning]Warning[white]][server]The command [white]" + commandType + "[server] cannot be executed in the current state[white]!");
+                    return false;
+                }
             }
             catch (Exception ex)
             {

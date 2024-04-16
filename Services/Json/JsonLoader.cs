@@ -1,4 +1,5 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Services.General;  // Ensure this is correctly referenced
 using System.Text.Json;
 
 namespace MudBucket.Services.Json
@@ -9,12 +10,13 @@ namespace MudBucket.Services.Json
         {
             try
             {
-                string jsonContent = File.ReadAllText(filePath);
-                return JsonSerializer.Deserialize<T>(jsonContent);
+                string encryptedJsonContent = File.ReadAllText(filePath);
+                string decryptedJsonContent = CryptoUtils.DecryptString(encryptedJsonContent);
+                return JsonSerializer.Deserialize<T>(decryptedJsonContent);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to load data from {filePath}", ex);
+                throw new InvalidOperationException($"Failed to load data from {filePath}: {ex.Message}", ex);
             }
         }
     }

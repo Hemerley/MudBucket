@@ -1,4 +1,5 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Services.General;
 using System.Text.Json;
 
 namespace MudBucket.Services.Json
@@ -14,11 +15,12 @@ namespace MudBucket.Services.Json
                     WriteIndented = true
                 };
                 string jsonContent = JsonSerializer.Serialize(data, options);
-                File.WriteAllText(filePath, jsonContent);
+                string encryptedJsonContent = CryptoUtils.EncryptString(jsonContent);
+                File.WriteAllText(filePath, encryptedJsonContent);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to write data to {filePath}", ex);
+                throw new InvalidOperationException($"Failed to write data to {filePath}: {ex.Message}", ex);
             }
         }
     }

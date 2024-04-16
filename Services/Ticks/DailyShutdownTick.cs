@@ -1,5 +1,4 @@
 ﻿using MudBucket.Interfaces;
-using System;
 
 namespace MudBucket.Services.Ticks
 {

@@ -55,38 +55,6 @@ namespace MudBucket.Structures
             }
         }
 
-        public void EquipItem(Item item, EquipmentSlot slot)
-        {
-            if (item.IsEquippable)
-            {
-                if (Equipment[slot] != null)
-                {
-                    SendMessage($"Replacing {Equipment[slot].Name} with {item.Name}.");
-                }
-
-                Equipment[slot] = item;
-                SendMessage($"{item.Name} equipped in the {slot} slot.");
-            }
-            else
-            {
-                SendMessage("This item cannot be equipped.");
-            }
-        }
-
-        public void UseItem(Item item)
-        {
-            if (item.IsConsumable)
-            {
-                item.Use(this);
-                Inventory.Remove(item);
-                SendMessage($"{item.Name} used.");
-            }
-            else
-            {
-                SendMessage("This item cannot be used.");
-            }
-        }
-
         public void SendMessage(string message)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(message + "\r\n");

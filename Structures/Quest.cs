@@ -52,4 +52,5 @@
             player.SendMessage($"Objective completed: {Description}");
         }
     }
+
 }

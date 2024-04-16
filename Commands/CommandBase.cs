@@ -1,25 +1,20 @@
 ﻿using MudBucket.Interfaces;
-using System;
+using MudBucket.Systems;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
-namespace MudBucket.Commands
+public abstract class CommandBase : ICommand
 {
-    public abstract class CommandBase : ICommand
+    public abstract SessionState[] ValidStates { get; }
+
+    public async Task<bool> Execute(TcpClient client, INetworkService networkService, PlayerSession session)
     {
-        public async Task<bool> Execute(TcpClient client, INetworkService networkService)
+        if (!ValidStates.Contains(session.CurrentState))
         {
-            try
-            {
-                return await ExecuteCommand(client, networkService);
-            }
-            catch (Exception ex)
-            {
-                await networkService.SendAsync($"[white][[server_error]ERROR[white]][server]Error executing command[white]:[server] {ex.Message}");
-                return false;
-            }
+            return false;
         }
 
-        protected abstract Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService);
+        return await ExecuteCommand(client, networkService, session);
     }
+
+    protected abstract Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session);
 }
