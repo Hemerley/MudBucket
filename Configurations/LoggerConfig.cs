@@ -11,7 +11,6 @@ namespace MudBucket.Configurations
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
-
             return new SerilogLogger(configuration);
         }
     }

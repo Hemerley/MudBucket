@@ -16,7 +16,6 @@ namespace MudBucket.Network
         private readonly ILogger _logger;
         private readonly IMessageFormatter _messageFormatter;
         private readonly Dictionary<TcpClient, PlayerSession> _sessions;
-
         public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser, IMessageFormatter messageFormatter)
         {
             _ipAddress = ipAddress;
@@ -27,9 +26,7 @@ namespace MudBucket.Network
             _messageFormatter = messageFormatter;
             _sessions = new Dictionary<TcpClient, PlayerSession>();
         }
-
         public bool IsRunning => _isRunning;
-
         public async Task Start()
         {
             _listener.Start();
@@ -54,7 +51,6 @@ namespace MudBucket.Network
                 Stop();
             }
         }
-
         public void Stop()
         {
             _isRunning = false;
@@ -65,7 +61,6 @@ namespace MudBucket.Network
             }
             _logger.Information("Server stopped");
         }
-
         public void BroadcastMessage(string message)
         {
             foreach (var session in _sessions.Values)
@@ -73,7 +68,6 @@ namespace MudBucket.Network
                 _ = session.SendMessageAsync(message);
             }
         }
-
         private void CloseSession(TcpClient client)
         {
             if (_sessions.TryGetValue(client, out var session))
@@ -83,7 +77,6 @@ namespace MudBucket.Network
                 _logger.Information("Client disconnected");
             }
         }
-
         public Dictionary<TcpClient, PlayerSession> Sessions => _sessions;
     }
 }

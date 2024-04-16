@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace MudBucket.Structures
+﻿namespace MudBucket.Structures
 {
     public class Quest
     {
@@ -10,13 +7,11 @@ namespace MudBucket.Structures
         public List<QuestObjective> Objectives { get; set; }
         public Dictionary<string, int> Rewards { get; set; }
         public bool IsComplete { get; set; }
-
         public Quest()
         {
             Objectives = new List<QuestObjective>();
             Rewards = new Dictionary<string, int>();
         }
-
         public void CheckCompletion(Player player)
         {
             IsComplete = Objectives.All(o => o.IsCompleted);
@@ -26,7 +21,6 @@ namespace MudBucket.Structures
                 player.SendMessage($"Quest completed: {Name}. Rewards have been given.");
             }
         }
-
         private void AwardRewards(Player player)
         {
             foreach (var reward in Rewards)
@@ -43,12 +37,10 @@ namespace MudBucket.Structures
             }
         }
     }
-
     public class QuestObjective
     {
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
-
         public void CompleteObjective(Player player)
         {
             IsCompleted = true;

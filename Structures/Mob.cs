@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MudBucket.Structures
+﻿namespace MudBucket.Structures
 {
     public class Mob
     {
@@ -31,12 +29,10 @@ namespace MudBucket.Structures
         public void Move(Room newRoom)
         {
             CurrentRoom = newRoom;
-            // Additional logic for moving the mob to a new room
         }
 
         public void Die()
         {
-            // Additional logic for when the mob dies
         }
     }
 }

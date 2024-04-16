@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MudBucket.Structures
+﻿namespace MudBucket.Structures
 {
     public class Race
     {
@@ -8,7 +6,6 @@ namespace MudBucket.Structures
         public string Description { get; set; }
         public List<string> Traits { get; set; }
         public Dictionary<string, int> BaseAttributes { get; set; }
-
         public Race()
         {
             Traits = new List<string>();

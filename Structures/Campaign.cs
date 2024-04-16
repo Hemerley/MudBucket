@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MudBucket.Structures
+﻿namespace MudBucket.Structures
 {
     public class Campaign
     {
@@ -10,26 +7,20 @@ namespace MudBucket.Structures
         public List<Quest> Quests { get; set; }
         public Dictionary<string, int> Rewards { get; set; }
         public bool IsActive { get; set; }
-
         public Campaign()
         {
             Quests = new List<Quest>();
             Rewards = new Dictionary<string, int>();
             IsActive = false;
         }
-
         public void Start()
         {
             IsActive = true;
-            // Additional logic for starting the campaign
         }
-
         public void End()
         {
             IsActive = false;
-            // Additional logic for ending the campaign
         }
-
         public void CheckQuestCompletion(Player player)
         {
             bool allQuestsCompleted = true;
@@ -41,14 +32,12 @@ namespace MudBucket.Structures
                     break;
                 }
             }
-
             if (allQuestsCompleted)
             {
                 GrantRewards(player);
                 End();
             }
         }
-
         private void GrantRewards(Player player)
         {
             foreach (var reward in Rewards)
@@ -61,7 +50,6 @@ namespace MudBucket.Structures
                     case "Gold":
                         player.AddGold(reward.Value);
                         break;
-                        // Add more types of rewards as needed
                 }
             }
         }

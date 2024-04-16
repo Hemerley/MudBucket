@@ -8,7 +8,6 @@ namespace MudBucket.Systems
         private readonly object _lock = new object();
         private Task? _schedulerTask;
         private bool _isRunning;
-
         public void Start()
         {
             if (!_isRunning)
@@ -17,13 +16,11 @@ namespace MudBucket.Systems
                 _schedulerTask = Task.Run(SchedulerLoop);
             }
         }
-
         public void Stop()
         {
             _isRunning = false;
             _schedulerTask?.Wait();
         }
-
         public void ScheduleTickable(ITickable tickable)
         {
             lock (_lock)
@@ -31,7 +28,6 @@ namespace MudBucket.Systems
                 _scheduledTickables[tickable] = tickable.GetInterval();
             }
         }
-
         public void UnscheduleTickable(ITickable tickable)
         {
             lock (_lock)
@@ -39,7 +35,6 @@ namespace MudBucket.Systems
                 _scheduledTickables.Remove(tickable);
             }
         }
-
         private async Task SchedulerLoop()
         {
             while (_isRunning)

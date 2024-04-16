@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MudBucket.Structures
+﻿namespace MudBucket.Structures
 {
     public enum SectorType
     {
@@ -25,7 +23,6 @@ namespace MudBucket.Structures
         OOC,
         Count
     }
-
     public enum RoomFlag
     {
         Dark,
@@ -69,11 +66,10 @@ namespace MudBucket.Structures
         NoEdit,
         Count
     }
-
     public class Room
     {
         public int Id { get; set; }
-        public string Name { get; set; }   
+        public string Name { get; set; }
         public string Description { get; set; }
         public List<Item> Items { get; set; }
         public List<Mob> Mobs { get; set; }
@@ -82,7 +78,6 @@ namespace MudBucket.Structures
         public bool IsPersistent { get; set; }
         public SectorType SectorType { get; set; }
         public List<RoomFlag> Flags { get; set; }
-
         public Room()
         {
             Items = new List<Item>();

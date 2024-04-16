@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace MudBucket.Structures
@@ -23,20 +21,20 @@ namespace MudBucket.Structures
         public int QuestPoints { get; set; }
         public int Experience { get; set; }
         public int CampaignPoints { get; set; }
-        public int Tier { get; set; } // New property for tier
-        public bool HeroStatus { get; set; } // New property for hero status
-        public int Remort { get; set; } // New property for remort
+        public int Tier { get; set; }
+        public bool HeroStatus { get; set; }
+        public int Remort { get; set; }
         public Room CurrentRoom { get; set; }
         public Dictionary<string, int> Attributes { get; set; }
         public List<Item> Inventory { get; set; }
         public Dictionary<EquipmentSlot, Item> Equipment { get; set; }
         public List<Quest> Quests { get; set; }
-
+        public string PromptFormat { get; set; }
+        public string BattlePromptFormat { get; set; }
         public enum EquipmentSlot
         {
             Head, Neck, Torso, Legs, Feet, Hands, Arms, Shield, Ring, Weapon
         }
-
         public Player(TcpClient client)
         {
             Client = client;
@@ -52,11 +50,12 @@ namespace MudBucket.Structures
             Quests = new List<Quest>();
             InitializeEquipmentSlots();
             CampaignPoints = 0;
-            Tier = 1; // Default tier
-            HeroStatus = false; // Default hero status
-            Remort = 0; // Default remort count
+            Tier = 1;
+            HeroStatus = false;
+            Remort = 0;
+            PromptFormat = "HP: {health}/{maxHealth} Mana: {mana}/{maxMana}";
+            BattlePromptFormat = "HP: {health}/{maxHealth} Mana: {mana}/{maxMana} Enemy HP: {enemyHealth}";
         }
-
         private void InitializeEquipmentSlots()
         {
             foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)))
@@ -64,13 +63,11 @@ namespace MudBucket.Structures
                 Equipment[slot] = null;
             }
         }
-
         public void SendMessage(string message)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(message + "\r\n");
             Client.GetStream().Write(buffer, 0, buffer.Length);
         }
-
         public void GainExperience(int xp)
         {
             Experience += xp;
@@ -82,7 +79,6 @@ namespace MudBucket.Structures
                 SendMessage($"Congratulations! You've reached level {Level}.");
             }
         }
-
         private void IncreaseStats()
         {
             MaxHealth += 10;
@@ -92,13 +88,11 @@ namespace MudBucket.Structures
             MaxMoves += 10;
             Moves = MaxMoves;
         }
-
         public void AddGold(int amount)
         {
             Gold += amount;
             SendMessage($"Added {amount} gold. Total gold now: {Gold}.");
         }
-
         public void RemoveQuest(Quest quest)
         {
             if (Quests.Contains(quest))
@@ -107,7 +101,6 @@ namespace MudBucket.Structures
                 SendMessage($"Quest removed: {quest.Name}");
             }
         }
-
         public void CheckQuestCompletion()
         {
             Quests.ForEach(quest => quest.CheckCompletion(this));

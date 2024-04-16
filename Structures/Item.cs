@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MudBucket.Structures
+﻿namespace MudBucket.Structures
 {
     public enum ItemType
     {
@@ -11,7 +9,6 @@ namespace MudBucket.Structures
         Key,
         Misc
     }
-
     public class Item
     {
         public string Name { get; set; }
@@ -22,12 +19,10 @@ namespace MudBucket.Structures
         public int Weight { get; set; }
         public int Value { get; set; }
         public Dictionary<string, int> Effects { get; set; }
-
         public Item()
         {
             Effects = new Dictionary<string, int>();
         }
-
         public void Use(Player player)
         {
             if (IsConsumable)
@@ -46,10 +41,8 @@ namespace MudBucket.Structures
                 Equip(player);
             }
         }
-
         private void Equip(Player player)
         {
-            // Placeholder for equipping logic
             player.SendMessage($"{Name} equipped.");
         }
     }

@@ -1,4 +1,5 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Structures;
 using System.Net.Sockets;
 
 namespace MudBucket.Systems
@@ -8,7 +9,6 @@ namespace MudBucket.Systems
         JustConnected,
         Playing
     }
-
     public class PlayerSession
     {
         private readonly TcpClient _client;
@@ -16,6 +16,8 @@ namespace MudBucket.Systems
         private readonly ICommandParser _commandParser;
         private readonly IMessageFormatter _messageFormatter;
         private SessionState _currentState;
+        public Player Player { get; set; }
+        public string[] LastCommandArguments { get; set; }
 
         public PlayerSession(TcpClient client, INetworkService networkService, ICommandParser commandParser, IMessageFormatter messageFormatter)
         {
@@ -26,9 +28,7 @@ namespace MudBucket.Systems
             _currentState = SessionState.JustConnected;
             InitializeSession();
         }
-
         public SessionState CurrentState => _currentState;
-
         public void ChangeStateToPlaying()
         {
             if (_currentState == SessionState.JustConnected)
@@ -36,21 +36,22 @@ namespace MudBucket.Systems
                 _currentState = SessionState.Playing;
             }
         }
-
         private async void InitializeSession()
         {
             await SendWelcomeMessage().ConfigureAwait(false);
         }
-
         public async Task ProcessInput(string input)
         {
-            var success = await _commandParser.ParseCommand(input, _client, this).ConfigureAwait(false);
+            string[] parts = input.Split(' ', 2);
+            string command = parts[0].Trim();
+            string arguments = parts.Length > 1 ? parts[1] : "";
+            LastCommandArguments = arguments.Split(' ');
+            var success = await _commandParser.ParseCommand(command, _client, this).ConfigureAwait(false);
             if (!success)
             {
                 Console.WriteLine("Failed to process command.");
             }
         }
-
         private async Task SendWelcomeMessage()
         {
             string art = @"
@@ -68,13 +69,11 @@ namespace MudBucket.Systems
 [server]Welcome to MudBucket[white]![server] Are you a [server_info][new] [server]or [server_info][returning][server] player[white]?";
             await SendMessageAsync(art).ConfigureAwait(false);
         }
-
         public async Task SendMessageAsync(string message)
         {
             var formattedMessage = _messageFormatter.FormatMessage(message);
             await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
         }
-
         public async Task HandleSession()
         {
             try
@@ -97,12 +96,10 @@ namespace MudBucket.Systems
                 Cleanup();
             }
         }
-
         public void Disconnect()
         {
             _client.Close();
         }
-
         public void Cleanup()
         {
             _networkService.Close();

@@ -5,16 +5,14 @@ namespace MudBucket.Services.General
 {
     public static class CryptoUtils
     {
-        private static readonly string Key = "0123456789ABCDEF"; // 16 bytes for AES-128
-        private static readonly string IV = "ABCDEF0123456789"; // 16 bytes for AES-128
-
+        private static readonly string Key = "0123456789ABCDEF";
+        private static readonly string IV = "ABCDEF0123456789";
         public static string EncryptString(string plainText)
         {
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = Encoding.UTF8.GetBytes(Key);
                 aesAlg.IV = Encoding.UTF8.GetBytes(IV);
-
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
                 using (MemoryStream msEncrypt = new MemoryStream())
                 {
@@ -29,14 +27,12 @@ namespace MudBucket.Services.General
                 }
             }
         }
-
         public static string DecryptString(string cipherText)
         {
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = Encoding.UTF8.GetBytes(Key);
                 aesAlg.IV = Encoding.UTF8.GetBytes(IV);
-
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
                 using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(cipherText)))
                 {

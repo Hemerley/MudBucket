@@ -2,19 +2,19 @@
 using MudBucket.Systems;
 using System.Net.Sockets;
 
-public abstract class CommandBase : ICommand
+namespace MudBucket.Commands
 {
-    public abstract SessionState[] ValidStates { get; }
-
-    public async Task<bool> Execute(TcpClient client, INetworkService networkService, PlayerSession session)
+    public abstract class CommandBase : ICommand
     {
-        if (!ValidStates.Contains(session.CurrentState))
+        public abstract SessionState[] ValidStates { get; }
+        public async Task<bool> Execute(TcpClient client, INetworkService networkService, PlayerSession session)
         {
-            return false;
+            if (!ValidStates.Contains(session.CurrentState))
+            {
+                return false;
+            }
+            return await ExecuteCommand(client, networkService, session);
         }
-
-        return await ExecuteCommand(client, networkService, session);
+        protected abstract Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session);
     }
-
-    protected abstract Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session);
 }
