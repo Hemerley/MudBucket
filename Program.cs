@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MudBucket.Commands;
 using MudBucket.Interfaces;
 using MudBucket.Network;
-using MudBucket.Services.Commands;
-using MudBucket.Services.Ticks;
+using MudBucket.Ticks;
 
 namespace MudBucket
 {

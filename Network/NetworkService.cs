@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace MudBucket.Services.Server
+namespace MudBucket.Network
 {
     public class NetworkService : INetworkService
     {

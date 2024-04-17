@@ -1,10 +1,9 @@
 ﻿using MudBucket.Interfaces;
-using MudBucket.Services.General;
-using MudBucket.Services.Server;
+using MudBucket.Network;
 using MudBucket.Systems;
 using System.Net.Sockets;
 
-namespace MudBucket.Services.Commands
+namespace MudBucket.Commands
 {
     public class CommandHandler : ICommandParser
     {

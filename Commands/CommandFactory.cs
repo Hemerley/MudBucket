@@ -1,9 +1,8 @@
-﻿using MudBucket.Commands;
-using MudBucket.Interfaces;
+﻿using MudBucket.Interfaces;
 using MudBucket.Systems;
 using System.Net.Sockets;
 
-namespace MudBucket.Services.Commands
+namespace MudBucket.Commands
 {
     public static class CommandFactory
     {

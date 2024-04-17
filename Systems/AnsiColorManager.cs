@@ -1,4 +1,4 @@
-﻿namespace MudBucket.Services.General
+﻿namespace MudBucket.Systems
 {
     public class AnsiColorManager
     {

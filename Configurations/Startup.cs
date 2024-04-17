@@ -1,14 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MudBucket;
+using MudBucket.Commands;
 using MudBucket.Configurations;
 using MudBucket.Interfaces;
 using MudBucket.Interfaces.MudBucket.Interfaces;
 using MudBucket.Network;
-using MudBucket.Services.Commands;
-using MudBucket.Services.General;
-using MudBucket.Services.Json;
-using MudBucket.Structures;
 using MudBucket.Systems;
 using System.Net;
 
@@ -36,12 +33,6 @@ public class Startup
                 provider.GetRequiredService<IMessageFormatter>()));
         services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
         services.AddSingleton<ServerManager>();
-        services.AddSingleton<IJsonLoader, GenericJsonLoader>();
-        var loader = new GenericJsonLoader();
-        var characterClasses = loader.LoadData<List<PlayerClass>>("classes.json", false);
-        var races = loader.LoadData<List<Race>>("races.json", false);
-        services.AddSingleton(characterClasses);
-        services.AddSingleton(races);
         services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
         services.AddSingleton<PlayerManager>();
     }

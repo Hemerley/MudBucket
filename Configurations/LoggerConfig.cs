@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MudBucket.Services.Logger;
+using MudBucket.Systems;
 using Serilog;
 
 namespace MudBucket.Configurations

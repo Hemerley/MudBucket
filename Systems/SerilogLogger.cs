@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 
-namespace MudBucket.Services.Logger
+namespace MudBucket.Systems
 {
     public class SerilogLogger : Interfaces.ILogger
     {

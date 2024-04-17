@@ -1,6 +1,6 @@
 ﻿using MudBucket.Interfaces;
 
-namespace MudBucket.Services.General
+namespace MudBucket.Systems
 {
     public static class ExceptionHandler
     {

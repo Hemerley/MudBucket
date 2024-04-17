@@ -1,7 +1,7 @@
 ﻿using MudBucket.Interfaces;
 using MudBucket.Structures;
 
-namespace MudBucket.Services.General
+namespace MudBucket.Systems
 {
     public class PromptService : IPromptService
     {

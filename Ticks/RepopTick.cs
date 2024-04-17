@@ -1,6 +1,6 @@
 ﻿using MudBucket.Interfaces;
 
-namespace MudBucket.Services.Ticks
+namespace MudBucket.Ticks
 {
     public class RepopTick : ITickable
     {

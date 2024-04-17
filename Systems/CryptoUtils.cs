@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace MudBucket.Services.General
+namespace MudBucket.Systems
 {
     public static class CryptoUtils
     {
