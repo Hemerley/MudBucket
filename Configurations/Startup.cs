@@ -4,7 +4,6 @@ using MudBucket;
 using MudBucket.Commands;
 using MudBucket.Configurations;
 using MudBucket.Interfaces;
-using MudBucket.Interfaces.MudBucket.Interfaces;
 using MudBucket.Network;
 using MudBucket.Systems;
 using System.Net;
@@ -31,9 +30,7 @@ public class Startup
                 provider.GetRequiredService<ILogger>(),
                 provider.GetRequiredService<ICommandParser>(),
                 provider.GetRequiredService<IMessageFormatter>()));
-        services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
         services.AddSingleton<ServerManager>();
-        services.AddSingleton<IDataPersistenceService, DataPersistenceService>();
         services.AddSingleton<PlayerManager>();
     }
 }

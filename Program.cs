@@ -14,6 +14,7 @@ namespace MudBucket
             var serverManager = serviceProvider.GetRequiredService<ServerManager>();
             var tickScheduler = serviceProvider.GetRequiredService<IScheduler>();
             var server = serviceProvider.GetRequiredService<TcpServer>();
+            var logger = serviceProvider.GetRequiredService<ILogger>();
             tickScheduler.ScheduleTickable(new CombatTick(serviceProvider.GetRequiredService<ILogger>()));
             tickScheduler.ScheduleTickable(new RepopTick(serviceProvider.GetRequiredService<ILogger>()));
             tickScheduler.ScheduleTickable(new WorldTick(serviceProvider.GetRequiredService<ILogger>()));
@@ -22,12 +23,11 @@ namespace MudBucket
             {
                 tickScheduler.Start();
                 serverManager.StartServer();
-                Console.WriteLine("Server and scheduler are running. Type 'shutdown' to shut down gracefully, 'abort' to abort the shutdown, or 'quit' to exit immediately.");
+                logger.Information("Server and scheduler are running. Type 'shutdown' to shut down gracefully, 'abort' to abort the shutdown, or 'quit' to exit immediately.");
                 await Task.Run(() => ListenForConsoleCommands(serverManager, server));
             }
             catch (Exception ex)
             {
-                var logger = serviceProvider.GetRequiredService<ILogger>();
                 logger.Error($"An unexpected error occurred: {ex.Message}");
             }
             finally
@@ -36,11 +36,14 @@ namespace MudBucket
                 {
                     disposable.Dispose();
                 }
-                Console.WriteLine("Server and scheduler stopped successfully.");
+                logger.Information("Server and scheduler are stopping...");
+                logger.Information("Server and scheduler stopped successfully.");
             }
         }
         private static void ListenForConsoleCommands(ServerManager serverManager, TcpServer server)
         {
+            var serviceProvider = ConfigureServices();
+            var logger = serviceProvider.GetRequiredService<ILogger>();
             while (true)
             {
                 var command = Console.ReadLine()?.Trim().ToLower();
@@ -54,11 +57,11 @@ namespace MudBucket
                         break;
                     case "quit":
                         server.BroadcastMessage("[white][[server_info]INFO[white]][server]Server is shutting down immediately[white]. [server]Thank you for playing[white]!");
-                        Console.WriteLine("Exiting immediately...");
+                        logger.Information("Server is shutting down immediately.");
                         Environment.Exit(0);
                         break;
                     default:
-                        Console.WriteLine("Unknown command. Available commands: shutdown, abort, quit");
+                        logger.Information("Unknown command: " + command + ". Available commands: shutdown, abort, quit");
                         break;
                 }
             }

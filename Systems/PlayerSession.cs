@@ -46,11 +46,7 @@ namespace MudBucket.Systems
             string command = parts[0].Trim();
             string arguments = parts.Length > 1 ? parts[1] : "";
             LastCommandArguments = arguments.Split(' ');
-            var success = await _commandParser.ParseCommand(command, _client, this).ConfigureAwait(false);
-            if (!success)
-            {
-                Console.WriteLine("Failed to process command.");
-            }
+            await _commandParser.ParseCommand(command, _client, this).ConfigureAwait(false);
         }
         private async Task SendWelcomeMessage()
         {
