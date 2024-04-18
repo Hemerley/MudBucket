@@ -16,7 +16,8 @@ namespace MudBucket.Systems
         private readonly ICommandParser _commandParser;
         private readonly IMessageFormatter _messageFormatter;
         private SessionState _currentState;
-        public Player Player { get; set; }
+        private PromptService _promptService;
+        public Player player { get; set; }
         public string[] LastCommandArguments { get; set; }
 
         public PlayerSession(TcpClient client, INetworkService networkService, ICommandParser commandParser, IMessageFormatter messageFormatter)
@@ -67,8 +68,17 @@ namespace MudBucket.Systems
         }
         public async Task SendMessageAsync(string message)
         {
-            var formattedMessage = _messageFormatter.FormatMessage(message);
-            await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
+            if (_currentState != SessionState.Playing)
+            {
+                var formattedMessage = _messageFormatter.FormatMessage(message);
+                await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
+            }else
+            {
+                var formattedMessage = _messageFormatter.FormatMessage(message);
+                var playerPrompt = _promptService.GeneratePrompt(player);
+                await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
+                await _networkService.SendAsync(playerPrompt).ConfigureAwait(false);
+            }   
         }
         public async Task HandleSession()
         {

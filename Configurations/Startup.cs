@@ -5,6 +5,7 @@ using MudBucket.Commands;
 using MudBucket.Configurations;
 using MudBucket.Interfaces;
 using MudBucket.Network;
+using MudBucket.Structures;
 using MudBucket.Systems;
 using System.Net;
 
@@ -20,6 +21,7 @@ public class Startup
         services.AddSingleton<ICommandParser>(provider => provider.GetRequiredService<CommandHandler>());
         services.AddSingleton<IScheduler, TickScheduler>();
         services.AddSingleton<ITickTimer, GameTickTimer>();
+        services.AddSingleton<GameDataRepository>(provider => GameDataRepository.Instance);
         services.AddSingleton<IMessageFormatter>(provider => new MessageFormatter(true));
         var ipAddress = IPAddress.Parse(configuration["ApplicationSettings:IPAddress"] ?? "127.0.0.1");
         var port = int.Parse(configuration["ApplicationSettings:Port"] ?? "8888");
@@ -31,6 +33,5 @@ public class Startup
                 provider.GetRequiredService<ICommandParser>(),
                 provider.GetRequiredService<IMessageFormatter>()));
         services.AddSingleton<ServerManager>();
-        services.AddSingleton<PlayerManager>();
     }
 }

@@ -8,16 +8,30 @@ namespace MudBucket
 {
     class Program
     {
+        private static ServiceProvider _serviceProvider;
+
+        public static ServiceProvider ServiceProvider
+        {
+            get
+            {
+                if (_serviceProvider == null)
+                {
+                    _serviceProvider = ConfigureServices();
+                }
+                return _serviceProvider;
+            }
+        }
+
         static async Task Main(string[] args)
         {
-            var serviceProvider = ConfigureServices();
-            var serverManager = serviceProvider.GetRequiredService<ServerManager>();
-            var tickScheduler = serviceProvider.GetRequiredService<IScheduler>();
-            var server = serviceProvider.GetRequiredService<TcpServer>();
-            var logger = serviceProvider.GetRequiredService<ILogger>();
-            tickScheduler.ScheduleTickable(new CombatTick(serviceProvider.GetRequiredService<ILogger>()));
-            tickScheduler.ScheduleTickable(new RepopTick(serviceProvider.GetRequiredService<ILogger>()));
-            tickScheduler.ScheduleTickable(new WorldTick(serviceProvider.GetRequiredService<ILogger>()));
+            _serviceProvider = ConfigureServices();
+            var serverManager = _serviceProvider.GetRequiredService<ServerManager>();
+            var tickScheduler = _serviceProvider.GetRequiredService<IScheduler>();
+            var server = _serviceProvider.GetRequiredService<TcpServer>();
+            var logger = _serviceProvider.GetRequiredService<ILogger>();
+            tickScheduler.ScheduleTickable(new CombatTick(_serviceProvider.GetRequiredService<ILogger>()));
+            tickScheduler.ScheduleTickable(new RepopTick(_serviceProvider.GetRequiredService<ILogger>()));
+            tickScheduler.ScheduleTickable(new WorldTick(_serviceProvider.GetRequiredService<ILogger>()));
             CommandFactory.Initialize(server.Sessions);
             try
             {
@@ -32,7 +46,7 @@ namespace MudBucket
             }
             finally
             {
-                if (serviceProvider is IDisposable disposable)
+                if (_serviceProvider is IDisposable disposable)
                 {
                     disposable.Dispose();
                 }
@@ -42,8 +56,8 @@ namespace MudBucket
         }
         private static void ListenForConsoleCommands(ServerManager serverManager, TcpServer server)
         {
-            var serviceProvider = ConfigureServices();
-            var logger = serviceProvider.GetRequiredService<ILogger>();
+            var _serviceProvider = ConfigureServices();
+            var logger = _serviceProvider.GetRequiredService<ILogger>();
             while (true)
             {
                 var command = Console.ReadLine()?.Trim().ToLower();

@@ -20,7 +20,9 @@ namespace MudBucket.Systems
             return format.Replace("{health}", player.Health.ToString())
                          .Replace("{mana}", player.Mana.ToString())
                          .Replace("{maxHealth}", player.MaxHealth.ToString())
-                         .Replace("{maxMana}", player.MaxMana.ToString());
+                         .Replace("{maxMana}", player.MaxMana.ToString())
+                         .Replace("{moves}", player.Moves.ToString())
+                         .Replace("{maxMoves}",player.MaxMoves.ToString());
         }
 
         private string ReplaceTokensWithEnemy(Player player, Mob enemy, string format)

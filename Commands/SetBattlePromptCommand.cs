@@ -17,7 +17,7 @@ namespace MudBucket.Commands
         public override SessionState[] ValidStates => new[] { SessionState.JustConnected, SessionState.Playing };
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session)
         {
-            session.Player.BattlePromptFormat = _battlePromptFormat;
+            session.player.BattlePromptFormat = _battlePromptFormat;
             await networkService.SendAsync("Battle prompt format updated.");
             return true;
         }

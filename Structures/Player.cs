@@ -1,12 +1,16 @@
 ﻿using System.Net.Sockets;
 using System.Text;
+using MudBucket.Systems;
+using Newtonsoft.Json;
 
 namespace MudBucket.Structures
 {
     public class Player
     {
         public string Name { get; set; }
-        public TcpClient Client { get; private set; }
+        public string Password { get; set; }
+        [JsonIgnore]
+        public PlayerSession Session { get; private set; }
         public string Race { get; set; }
         public string PlayerClass { get; set; }
         public int Level { get; set; }
@@ -35,9 +39,9 @@ namespace MudBucket.Structures
         {
             Head, Neck, Torso, Legs, Feet, Hands, Arms, Shield, Ring, Weapon
         }
-        public Player(TcpClient client)
+        public Player(PlayerSession playerSession)
         {
-            Client = client;
+            Session = playerSession;
             Attributes = new Dictionary<string, int>
             {
                 {"Strength", 10},
@@ -63,10 +67,9 @@ namespace MudBucket.Structures
                 Equipment[slot] = null;
             }
         }
-        public void SendMessage(string message)
+        public async Task SendMessage(string message)
         {
-            byte[] buffer = Encoding.ASCII.GetBytes(message + "\r\n");
-            Client.GetStream().Write(buffer, 0, buffer.Length);
+            await Session.SendMessageAsync(message);
         }
         public void GainExperience(int xp)
         {
