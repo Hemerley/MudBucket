@@ -15,18 +15,26 @@ namespace MudBucket.Structures
         {
             foreach (var mob in mobs)
             {
-                if (roomMap.TryGetValue(mob.RoomId, out Room room))
+                int roomId = mob.RoomId;
+                Console.WriteLine($"Attempting to place mob {mob.Name} in room {roomId}");
+
+                if (roomMap[roomId].Id == roomId)
                 {
-                    mob.CurrentRoom = room;
-                    // Optionally, add the mob to the room's Mobs list if it exists
-                    if (room.Mobs is List<Mob> roomMobs)
+                    // Assuming you need to update the mob's CurrentRoom property to reference the actual Room object
+                    mob.CurrentRoom = roomMap[roomId]; // This might need to be adjusted based on your class structure
+
+                    Console.WriteLine($"Placed mob {mob.Name} in room {roomMap[roomId].Name}");
+
+                    // Ensure the room has an initialized Mobs list
+                    if (roomMap[roomId].Mobs == null)
                     {
-                        roomMobs.Add(mob);
+                        roomMap[roomId].Mobs = new List<Mob>();
                     }
-                    else
-                    {
-                        room.Mobs = new List<Mob> { mob };
-                    }
+                    roomMap[roomId].Mobs.Add(mob);
+                }
+                else
+                {
+                    Console.WriteLine($"Room ID {roomId} not found for mob {mob.Name}");
                 }
             }
         }

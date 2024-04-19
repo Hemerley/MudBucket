@@ -1,4 +1,5 @@
-﻿using MudBucket.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MudBucket.Interfaces;
 using MudBucket.Systems;
 using System.Net.Sockets;
 
@@ -13,6 +14,7 @@ namespace MudBucket.Commands
         }
         public static ICommand CreateCommand(string commandType, string[] parameters = null)
         {
+            Program.ServiceProvider.GetRequiredService<ILogger>().Information($"Command Type: {commandType}, Parameters: {string.Join(", ", parameters)}");
             switch (commandType.ToLower())
             {
                 case "look":

@@ -9,7 +9,7 @@ namespace MudBucket.Commands
         public override SessionState[] ValidStates => new[] { SessionState.JustConnected, SessionState.Playing };
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session)
         {
-            await networkService.SendAsync("[white][[server_info]INFO[white]][server]Displaying help files...");
+            await networkService.SendAsync("[white][[server_info]INFO[white]][server]Displaying help files...", session.player);
             return true;
         }
     }

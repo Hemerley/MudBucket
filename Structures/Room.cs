@@ -1,4 +1,6 @@
-﻿using MudBucket.Systems;
+﻿using Microsoft.Extensions.Primitives;
+using MudBucket.Interfaces;
+using MudBucket.Systems;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -77,19 +79,23 @@ namespace MudBucket.Structures
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<Item> Items { get; set; } = new List<Item>(); // Placeholder for actual item types
-        public List<Mob> Mobs { get; set; } = new List<Mob>();  // Placeholder for actual mob types
-        public Dictionary<string, int> Exits { get; set; } = new Dictionary<string, int>(); // Room ID references
-        public List<Quest> Quests { get; set; } = new List<Quest>(); // Placeholder for actual quest types
+        public List<Item> Items { get; set; }
+        public List<Mob> Mobs { get; set; }
+        public Dictionary<string, int> Exits { get; set; } = new Dictionary<string, int>();
+        public List<Quest> Quests { get; set; }
+        public List<Player> Players { get; set; }
         public bool IsPersistent { get; set; }
         public SectorType SectorType { get; set; }
-        public List<RoomFlag> Flags { get; set; } = new List<RoomFlag>();
+        public List<RoomFlag> Flags { get; set; }
 
         [JsonIgnore]
         public Dictionary<string, Room> ResolvedExits { get; set; } = new Dictionary<string, Room>();
 
+        private AnsiColorManager _colorManager = new AnsiColorManager();
+
         public Room()
         {
+            Players = new List<Player>();
             Items = new List<Item>();
             Mobs = new List<Mob>();
             Exits = new Dictionary<string, int>();
@@ -111,39 +117,109 @@ namespace MudBucket.Structures
         public void DescribeRoom(Player player)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"[white]{Name}");  // Room name in bold and white color
-            stringBuilder.AppendLine($"{Description}");  // Room description
+            stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_yellow]" + Name + "[reset]"));
+            stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[white]" + Description + "[reset]"));
 
             if (Items.Any())
             {
-                stringBuilder.AppendLine(); // Added space
-                stringBuilder.AppendLine("[yellow]You see here:");
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_cyan]You see here:[reset]"));
                 foreach (var item in Items)
                 {
-                    stringBuilder.AppendLine($"[yellow]- [cyan]{item.Name}");  // Item names in cyan color
+                    stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_cyan]- " + item.Name + "[reset]"));
                 }
             }
 
             if (Mobs.Any())
             {
-                stringBuilder.AppendLine(); // Added space
-                stringBuilder.AppendLine("[red]Creatures:");
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_red]Creatures:[reset]"));
                 foreach (var mob in Mobs)
                 {
-                    stringBuilder.AppendLine($"[red]- [green]{mob.Name}");  // Mob names in green color
+                    stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_red]- " + mob.Name + "[reset]"));
+                }
+            }
+
+            if (Players.Any())
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_green]Players:[reset]"));
+                foreach (var _player in Players)
+                {
+                    if (_player.Name != player.Name)
+                    {
+                        stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_green]- " + _player.Name + "[reset]"));
+                    }
                 }
             }
 
             if (Exits.Any())
             {
-                stringBuilder.AppendLine(); // Added space
-                stringBuilder.AppendLine("[magenta]Exits:");
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_magenta]Exits:[reset]"));
                 foreach (var exit in Exits.Keys)
                 {
-                    stringBuilder.AppendLine($"[magenta]- [blue]{exit}");  // Exit directions in blue color
+                    stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[bright_magenta]- " + exit + "[reset]"));
                 }
             }
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine(_colorManager.ApplyColorCodes("[server_info]Room ID: " + Id + "[reset]"));
+            stringBuilder.AppendLine();
             player.SendMessage(stringBuilder.ToString());
         }
+
+        public string GenerateAsciiMap(Dictionary<int, Room> roomMap)
+        {
+            StringBuilder mapBuilder = new StringBuilder();
+
+            // Retrieve adjacent rooms
+            Room northRoom, southRoom, eastRoom, westRoom;
+            ResolvedExits.TryGetValue("north", out northRoom);
+            ResolvedExits.TryGetValue("south", out southRoom);
+            ResolvedExits.TryGetValue("east", out eastRoom);
+            ResolvedExits.TryGetValue("west", out westRoom);
+
+            // Prepare symbols for each room
+            string northSymbol = northRoom != null ? GetRoomSymbol(northRoom.SectorType) : "X ";
+            string southSymbol = southRoom != null ? GetRoomSymbol(southRoom.SectorType) : "X ";
+            string eastSymbol = eastRoom != null ? GetRoomSymbol(eastRoom.SectorType) : "X ";
+            string westSymbol = westRoom != null ? GetRoomSymbol(westRoom.SectorType) : "X ";
+            string currentRoomSymbol = GetRoomSymbol(SectorType);
+
+            // Map construction with squares and open paths ensuring all rows are aligned
+            mapBuilder.AppendLine("    +---+       ");
+            mapBuilder.AppendLine("    | " + northSymbol + "|       ");
+            mapBuilder.AppendLine("    +---+       ");
+            mapBuilder.AppendLine("+---+---+---+");
+            mapBuilder.AppendLine("| " + westSymbol + "| " + currentRoomSymbol + "| " + eastSymbol + "|");
+            mapBuilder.AppendLine("+---+---+---+");
+            mapBuilder.AppendLine("    +---+       ");
+            mapBuilder.AppendLine("    | " + southSymbol + "|       ");
+            mapBuilder.AppendLine("    +---+       ");
+
+            return mapBuilder.ToString();
+        }
+
+
+        private string GetRoomSymbol(SectorType type)
+        {
+            switch (type)
+            {
+                case SectorType.City:
+                    return _colorManager.ApplyColorCodes("[bright_yellow]# [reset]");  // '#' can be visualized as clustered buildings of a city
+                case SectorType.Forest:
+                    return _colorManager.ApplyColorCodes("[green]* [reset]");  // '*' resembles trees or foliage
+                case SectorType.WaterSwim:
+                case SectorType.WaterNoSwim:
+                    return _colorManager.ApplyColorCodes("[blue]~ [reset]");  // '~' often used to represent waves
+                case SectorType.Mountains:
+                    return _colorManager.ApplyColorCodes("[bright_black]^ [reset]");  // '^' is a common symbol for mountain peaks
+                case SectorType.Desert:
+                    return _colorManager.ApplyColorCodes("[yellow]= [reset]");  // '=' could be seen as layers of sand dunes
+                default:
+                    return _colorManager.ApplyColorCodes("[white]. [reset]");  // '.' for generic or unknown terrain types
+            }
+        }
+
     }
 }

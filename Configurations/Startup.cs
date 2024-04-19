@@ -30,7 +30,7 @@ public class Startup
                 ipAddress,
                 port,
                 provider.GetRequiredService<ILogger>(),
-                provider.GetRequiredService<ICommandParser>(),
+                provider.GetRequiredService<CommandHandler>(),
                 provider.GetRequiredService<IMessageFormatter>()));
         services.AddSingleton<ServerManager>();
     }

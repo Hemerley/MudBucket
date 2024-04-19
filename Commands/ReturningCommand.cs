@@ -9,7 +9,7 @@ namespace MudBucket.Commands
         public override SessionState[] ValidStates => new[] { SessionState.JustConnected };
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session)
         {
-            await networkService.SendAsync("[white][[server_info]INFO[white]][server]Welcome back!");
+            await networkService.SendAsync("[white][[server_info]INFO[white]][server]Welcome back!", session.player);
             return true;
         }
     }

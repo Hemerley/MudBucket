@@ -1,6 +1,8 @@
-﻿using MudBucket.Interfaces;
+﻿using MudBucket.Commands;
+using MudBucket.Interfaces;
 using MudBucket.Structures;
 using System.Net.Sockets;
+using System.Text;
 
 namespace MudBucket.Systems
 {
@@ -13,15 +15,16 @@ namespace MudBucket.Systems
     {
         private readonly TcpClient _client;
         private readonly INetworkService _networkService;
-        private readonly ICommandParser _commandParser;
+        private readonly CommandHandler _commandParser;
         private readonly IMessageFormatter _messageFormatter;
         private SessionState _currentState;
         private PromptService _promptService;
         public Player player { get; set; }
         public string[] LastCommandArguments { get; set; }
 
-        public PlayerSession(TcpClient client, INetworkService networkService, ICommandParser commandParser, IMessageFormatter messageFormatter)
+        public PlayerSession(TcpClient client, INetworkService networkService, CommandHandler commandParser, IMessageFormatter messageFormatter)
         {
+            _promptService = new PromptService();
             _client = client;
             _networkService = networkService;
             _commandParser = commandParser;
@@ -47,7 +50,7 @@ namespace MudBucket.Systems
             string command = parts[0].Trim();
             string arguments = parts.Length > 1 ? parts[1] : "";
             LastCommandArguments = arguments.Split(' ');
-            await _commandParser.ParseCommand(command, _client, this).ConfigureAwait(false);
+            await _commandParser.ParseCommand(input, _client, this).ConfigureAwait(false);
         }
         private async Task SendWelcomeMessage()
         {
@@ -70,14 +73,14 @@ namespace MudBucket.Systems
         {
             if (_currentState != SessionState.Playing)
             {
-                var formattedMessage = _messageFormatter.FormatMessage(message);
-                await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
+                var formattedMessage = _messageFormatter.FormatMessage(message, player);
+                await _networkService.SendAsync(formattedMessage, player).ConfigureAwait(false);
             }else
             {
-                var formattedMessage = _messageFormatter.FormatMessage(message);
-                var playerPrompt = _promptService.GeneratePrompt(player);
-                await _networkService.SendAsync(formattedMessage).ConfigureAwait(false);
-                await _networkService.SendAsync(playerPrompt).ConfigureAwait(false);
+                var playerPrompt = _messageFormatter.FormatMessage(_promptService.GeneratePrompt(player), player);
+                await _networkService.SendAsync(playerPrompt, player).ConfigureAwait(false);
+                var formattedMessage = _messageFormatter.FormatMessage(message, player);
+                await _networkService.SendAsync(formattedMessage, player).ConfigureAwait(false);
             }   
         }
         public async Task HandleSession()

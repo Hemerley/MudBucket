@@ -10,7 +10,7 @@ namespace MudBucket.Commands
 
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session)
         {
-            await networkService.SendAsync("[white][[server_warning]Warning[white]][server]Arf[white],[server] Arf[white]! [server]Bucket doesn[white]'[server]t understand[white]!");
+            await networkService.SendAsync("[white][[server_warning]Warning[white]][server]Arf[white],[server] Arf[white]! [server]Bucket doesn[white]'[server]t understand[white]!", session.player);
             return true;
         }
     }

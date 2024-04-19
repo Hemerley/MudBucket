@@ -1,4 +1,5 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Structures;
 using System.Net.Sockets;
 using System.Text;
 
@@ -13,9 +14,9 @@ namespace MudBucket.Network
             _client = client;
             _messageFormatter = messageFormatter;
         }
-        public async Task SendAsync(string message)
+        public async Task SendAsync(string message, Player player)
         {
-            message = _messageFormatter.FormatMessage(message);
+            message = _messageFormatter.FormatMessage(message, player);
             var buffer = Encoding.ASCII.GetBytes(message);
             await _client.GetStream().WriteAsync(buffer, 0, buffer.Length);
         }

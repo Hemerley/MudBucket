@@ -1,4 +1,5 @@
-﻿using MudBucket.Interfaces;
+﻿using MudBucket.Commands;
+using MudBucket.Interfaces;
 using MudBucket.Systems;
 using System.Net;
 using System.Net.Sockets;
@@ -11,11 +12,11 @@ namespace MudBucket.Network
         private readonly int _port;
         private TcpListener _listener;
         private bool _isRunning;
-        private readonly ICommandParser _commandParser;
+        private readonly CommandHandler _commandParser;
         private readonly ILogger _logger;
         private readonly IMessageFormatter _messageFormatter;
         private readonly Dictionary<TcpClient, PlayerSession> _sessions;
-        public TcpServer(IPAddress ipAddress, int port, ILogger logger, ICommandParser commandParser, IMessageFormatter messageFormatter)
+        public TcpServer(IPAddress ipAddress, int port, ILogger logger, CommandHandler commandParser, IMessageFormatter messageFormatter)
         {
             _ipAddress = ipAddress;
             _port = port;

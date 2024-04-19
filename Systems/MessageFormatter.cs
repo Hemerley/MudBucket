@@ -1,4 +1,6 @@
 ﻿using MudBucket.Interfaces;
+using MudBucket.Structures;
+using System.Text;
 
 namespace MudBucket.Systems
 {
@@ -6,18 +8,23 @@ namespace MudBucket.Systems
     {
         private readonly AnsiColorManager _ansiColorManager;
         private readonly bool _ansiColorEnabled;
+        private PromptService _promptService;
         public MessageFormatter(bool ansiColorEnabled)
         {
+            _promptService = new PromptService();
             _ansiColorEnabled = ansiColorEnabled;
             _ansiColorManager = new AnsiColorManager();
         }
-        public string FormatMessage(string message)
+        public string FormatMessage(string message, Player player)
         {
+            StringBuilder stringBuilder = new StringBuilder();
             if (_ansiColorEnabled)
             {
-                message = _ansiColorManager.ApplyColorCodes(message);
+                stringBuilder.AppendLine(_ansiColorManager.ApplyColorCodes(message));
             }
-            return message + "\r\n";
+
+            stringBuilder.AppendLine();
+            return stringBuilder.ToString();
         }
     }
 }

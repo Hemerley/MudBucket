@@ -18,7 +18,7 @@ namespace MudBucket.Commands
             {
                 if (session == foundSession)
                 {
-                    await networkService.SendAsync("[white][[server_info]INFO[white]][server]You have been successfully disconnected[white], [server] Goodbye[white]!");
+                    await networkService.SendAsync("[white][[server_info]INFO[white]][server]You have been successfully disconnected[white], [server] Goodbye[white]!", session.player);
                     session.Cleanup();
                     return true;
                 }

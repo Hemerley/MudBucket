@@ -18,7 +18,7 @@ namespace MudBucket.Commands
         protected override async Task<bool> ExecuteCommand(TcpClient client, INetworkService networkService, PlayerSession session)
         {
             session.player.BattlePromptFormat = _battlePromptFormat;
-            await networkService.SendAsync("Battle prompt format updated.");
+            await networkService.SendAsync("Battle prompt format updated.", session.player);
             return true;
         }
     }
